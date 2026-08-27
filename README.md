@@ -1,24 +1,30 @@
 # Tejasvin M — Portfolio
 
-Personal developer portfolio built with React and Vite.
+Personal developer portfolio showcasing my technical skills, internship experience, projects, and professional background.
+
+🌐 **Live Portfolio:** https://tejju-portfolio.netlify.app/
 
 ## Tech Stack
 
 - React
 - JavaScript
-- CSS
+- HTML5
+- CSS3
 - Vite
 
 ## Features
 
-- Responsive portfolio layout
-- Interactive skill section
-- Animated section reveals
+- Responsive portfolio design
+- Interactive skills section
+- Scroll-based animations
 - Project showcase
-- Experience timeline
-- Contact section
-- Social links
+- Experience section
+- Contact and social links
 
-## Live Demo
+## Getting Started
 
-https://tejju-portfolio.netlify.app/
+```bash
+git clone https://github.com/TejasvinM/Portfolio.git
+cd Portfolio
+npm install
+npm run dev
