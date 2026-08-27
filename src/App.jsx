@@ -376,14 +376,13 @@ function Skills(){
                   <div style={{flex:1,height:3,background:C.border,borderRadius:3}}>
                     <div style={{height:"100%",width:`${sk.level}%`,background:`linear-gradient(90deg,${C.goldD},${C.gold})`,borderRadius:3,transition:"width .6s ease"}}/>
                   </div>
-                  <span style={{fontSize:12,color:C.gold,fontFamily:FM,fontWeight:600}}>{sk.level}%</span>
                 </div>
               </>);
             })():<p style={{fontSize:13,color:C.muted,fontFamily:FM}}>← Hover a skill to inspect</p>}
           </div>
           {/* Mini stats */}
           <div style={{display:"flex",gap:28}}>
-            {[["14","Skills"],["5","Domains"],["2+","Years Exp"]].map(([n,l])=>(
+            {[["14","Skills"],["5","Domains"],].map(([n,l])=>(
               <div key={l}>
                 <div style={{fontFamily:FH,fontSize:38,fontWeight:700,color:C.gold,lineHeight:1,fontStyle:"italic"}}>{n}</div>
                 <div style={{fontSize:10,color:C.muted,letterSpacing:".1em",textTransform:"uppercase",marginTop:4,fontFamily:FM}}>{l}</div>
@@ -405,7 +404,6 @@ function SkillBar({name,level,cat,active,onHover,index}){
       <div style={{flex:1,height:2,background:C.subtle,borderRadius:2}}>
         <div style={{height:"100%",borderRadius:2,background:active?`linear-gradient(90deg,${C.goldD},${C.gold})`:C.subtle,width:vis?`${level}%`:"0%",transition:`width .9s cubic-bezier(.16,1,.3,1) ${index*.04}s,background .3s`,boxShadow:active?`0 0 6px ${C.gold}70`:"none"}}/>
       </div>
-      <span style={{fontFamily:FM,fontSize:11,color:active?C.gold:C.subtle,width:32,textAlign:"right",flexShrink:0,transition:"color .3s"}}>{level}%</span>
     </div>
   );
 }
