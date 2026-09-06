@@ -1,4 +1,4 @@
-import photo from "./assets/photo.jpeg";
+import photo from "./assets/photo.jpg.png";
 import { useState, useEffect, useRef } from "react";
  
 /* ── Palette ──────────────────────────────────────────────── */
@@ -75,6 +75,7 @@ const PROJECTS = [
     title: "European Travel Organization — Relational DB",
     stack: ["PostgreSQL", "MySQL", "MS SQL Server"],
     desc: "Designed a normalized relational database covering customers, tour packages, bookings, payments, hotels, guides, flights, and countries. Implemented PKs, FKs, composite keys, and junction tables following 3NF principles across 10 tables.",
+     link: "https://github.com/TejasvinM/Europian_Travel_organization_Database",
   },
 ];
  
@@ -461,7 +462,7 @@ function Works(){
   );
 }
  
-function ProjectCard({num,title,stack,desc}){
+function ProjectCard({num,title,stack,desc,link}){
   const [hov,setHov]=useState(false);
   return(
     <div onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)} style={{background:hov?C.card:C.surface,border:`1px solid ${hov?C.gold+"45":C.border}`,borderRadius:14,padding:"30px 26px",transition:"all .35s ease",cursor:"default",position:"relative",overflow:"hidden"}}>
@@ -471,9 +472,10 @@ function ProjectCard({num,title,stack,desc}){
       </div>
       <div style={{fontFamily:FH,fontSize:18,fontWeight:700,color:C.text,marginBottom:10,fontStyle:"italic"}}>{title}</div>
       <p style={{fontSize:13,color:C.muted,lineHeight:1.82,fontFamily:FB}}>{desc}</p>
-      <div style={{marginTop:18,fontSize:12,color:hov?C.gold:C.subtle,fontFamily:FM,transition:"color .3s"}}>
-        View project <span style={{display:"inline-block",transform:hov?"translateX(4px)":"none",transition:"transform .3s"}}>→</span>
-      </div>
+      <div onClick={()=> link && window.open(link, "_blank")}
+  style={{marginTop:18,fontSize:12,color:hov?C.gold:C.subtle,fontFamily:FM,transition:"color .3s",cursor:link?"pointer":"default"}}>
+  View project <span style={{display:"inline-block",transform:hov?"translateX(4px)":"none",transition:"transform .3s"}}>→</span>
+</div>
     </div>
   );
 }
