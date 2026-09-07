@@ -28,3 +28,4 @@ git clone https://github.com/TejasvinM/Portfolio.git
 cd Portfolio
 npm install
 npm run dev
+```
