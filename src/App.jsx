@@ -126,12 +126,13 @@ function SLabel({children}){
 /* ── Nav ──────────────────────────────────────────────────── */
 function Nav(){
   const [sc,setSc]=useState(false);
+  const [open,setOpen]=useState(false);
   useEffect(()=>{const fn=()=>setSc(window.scrollY>30);window.addEventListener("scroll",fn);return()=>window.removeEventListener("scroll",fn);},[]);
-  const go=id=>document.getElementById(id)?.scrollIntoView({behavior:"smooth"});
+  const go=id=>{setOpen(false);document.getElementById(id)?.scrollIntoView({behavior:"smooth"});};
   return(
-    <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:300,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 52px",height:64,background:sc?"rgba(14,14,14,0.96)":"transparent",backdropFilter:sc?"blur(20px)":"none",borderBottom:sc?`1px solid ${C.border}`:"none",transition:"all .4s ease"}}>
+    <nav className={`nav${sc?" nav-sc":""}`} style={{position:"fixed",top:0,left:0,right:0,zIndex:300,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 52px",height:64,background:sc?"rgba(14,14,14,0.96)":"transparent",backdropFilter:sc?"blur(20px)":"none",borderBottom:sc?`1px solid ${C.border}`:"none",transition:"all .4s ease"}}>
       <div style={{width:40,height:40,background:C.gold,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FH,fontWeight:700,fontSize:17,color:C.bgDark,cursor:"pointer",borderRadius:4}} onClick={()=>go("home")}>T.</div>
-      <div style={{display:"flex",gap:4}}>
+      <div className={`nav-links${open?" open":""}`} style={{display:"flex",gap:4}}>
         {["Home","About","Skills","Works","Contact"].map(l=>(
           <button key={l} onClick={()=>go(l.toLowerCase())} style={{background:"none",border:"none",cursor:"pointer",fontFamily:FB,fontSize:14,color:C.muted,padding:"6px 16px",transition:"color .2s",letterSpacing:".02em"}}
             onMouseEnter={e=>e.currentTarget.style.color=C.gold}
@@ -140,7 +141,7 @@ function Nav(){
         ))}
       </div>
       <div style={{display:"flex",gap:8}}>
-        <div style={{width:36,height:36,border:`1px solid ${C.border}`,borderRadius:4,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:5,cursor:"pointer"}}
+        <div className="nav-burger" onClick={()=>setOpen(o=>!o)} style={{width:36,height:36,border:`1px solid ${C.border}`,borderRadius:4,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:5,cursor:"pointer"}}
           onMouseEnter={e=>e.currentTarget.style.borderColor=C.gold}
           onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}
         >
@@ -190,7 +191,7 @@ function Hero(){
       <div style={{position:"absolute",bottom:"10%",right:"12%",width:320,height:320,borderRadius:"50%",background:`radial-gradient(circle,${C.gold}05 0%,transparent 65%)`,pointerEvents:"none"}}/>
  
       {/* Social sidebar */}
-      <div style={{...a(1.1),position:"absolute",left:26,bottom:110,zIndex:10,display:"flex",flexDirection:"column",alignItems:"center",gap:14}}>
+      <div className="hero-sidebar" style={{...a(1.1),position:"absolute",left:26,bottom:110,zIndex:10,display:"flex",flexDirection:"column",alignItems:"center",gap:14}}>
         {SOCIALS.map(s=>(
           <a key={s.label} href={s.href} target="_blank" rel="noreferrer" style={{textDecoration:"none"}}>
             <div style={{width:32,height:32,borderRadius:6,background:C.surface,border:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,color:C.muted,fontFamily:FM,letterSpacing:".05em",cursor:"pointer",transition:"all .25s"}}
@@ -203,19 +204,19 @@ function Hero(){
       </div>
  
       {/* 3-col hero grid */}
-      <div style={{display:"grid",gridTemplateColumns:"1fr 400px 360px",minHeight:"calc(100vh - 100px)",paddingTop:64}}>
+      <div className="hero-grid" style={{display:"grid",gridTemplateColumns:"1fr 400px 360px",minHeight:"calc(100vh - 100px)",paddingTop:64}}>
  
         {/* LEFT — big name */}
-        <div style={{display:"flex",alignItems:"center",paddingLeft:"6vw",paddingBottom:50,zIndex:5}}>
+        <div className="hero-left" style={{display:"flex",alignItems:"center",paddingLeft:"6vw",paddingBottom:50,zIndex:5}}>
           <div>
             <div style={{...a(.2),marginBottom:22}}>
-              <span style={{fontFamily:FM,fontSize:11,color:C.gold,background:`${C.gold}12`,padding:"5px 14px",borderRadius:20,border:`1px solid ${C.gold}28`,letterSpacing:".08em"}}>
+              <span className="hero-tag" style={{fontFamily:FM,fontSize:11,color:C.gold,background:`${C.gold}12`,padding:"5px 14px",borderRadius:20,border:`1px solid ${C.gold}28`,letterSpacing:".08em"}}>
                 Python Developer · Data Automation · Backend
               </span>
             </div>
             <div style={a(.38)}>
-              <div style={{fontFamily:FH,fontSize:"clamp(60px,8.5vw,112px)",fontWeight:700,lineHeight:.9,letterSpacing:"-2px",color:C.text,fontStyle:"italic"}}>Tejas</div>
-              <div style={{fontFamily:FH,fontSize:"clamp(60px,8.5vw,112px)",fontWeight:700,lineHeight:.9,letterSpacing:"-2px",WebkitTextStroke:`1.5px ${C.gold}`,color:"transparent",fontStyle:"italic",marginBottom:32}}>vin M.</div>
+              <div className="hero-name" style={{fontFamily:FH,fontSize:"clamp(60px,8.5vw,112px)",fontWeight:700,lineHeight:.9,letterSpacing:"-2px",color:C.text,fontStyle:"italic"}}>Tejas</div>
+              <div className="hero-name" style={{fontFamily:FH,fontSize:"clamp(60px,8.5vw,112px)",fontWeight:700,lineHeight:.9,letterSpacing:"-2px",WebkitTextStroke:`1.5px ${C.gold}`,color:"transparent",fontStyle:"italic",marginBottom:32}}>vin M.</div>
             </div>
             <div style={{...a(.55),display:"flex",gap:10,flexWrap:"wrap"}}>
               <GoldBtn primary onClick={()=>document.getElementById("contact")?.scrollIntoView({behavior:"smooth"})}>Contact Me</GoldBtn>
@@ -225,8 +226,8 @@ function Hero(){
         </div>
  
         {/* CENTER — photo */}
-        <div style={{...a(.52,0,0),display:"flex",alignItems:"flex-end",justifyContent:"center",zIndex:6,position:"relative"}}>
-          <div style={{width:"100%",height:"80vh",background:`linear-gradient(170deg,#242424 0%,#161616 100%)`,position:"relative",overflow:"hidden",borderTop:`3px solid ${C.gold}`}}>
+        <div className="hero-photo" style={{...a(.52,0,0),display:"flex",alignItems:"flex-end",justifyContent:"center",zIndex:6,position:"relative"}}>
+          <div className="hero-photo-frame" style={{width:"100%",height:"80vh",background:`linear-gradient(170deg,#242424 0%,#161616 100%)`,position:"relative",overflow:"hidden",borderTop:`3px solid ${C.gold}`}}>
             {/* Placeholder */}
             <img
   src={photo}
@@ -247,13 +248,13 @@ function Hero(){
           </div>
  
           {/* Animated badges below photo */}
-          <div style={{position:"absolute",bottom:-54,left:"50%",transform:"translateX(-50%)",display:"flex",gap:10,zIndex:20}}>
+          <div className="hero-badges" style={{position:"absolute",bottom:-54,left:"50%",transform:"translateX(-50%)",display:"flex",gap:10,zIndex:20}}>
             {SOCIALS.map((s,i)=><SocialBadge key={s.label} {...s} delay={.7+i*.12}/>)}
           </div>
         </div>
  
         {/* RIGHT — info */}
-        <div style={{...a(.72,18,0),display:"flex",flexDirection:"column",justifyContent:"center",padding:"0 4vw 50px 3vw",zIndex:5}}>
+        <div className="hero-info" style={{...a(.72,18,0),display:"flex",flexDirection:"column",justifyContent:"center",padding:"0 4vw 50px 3vw",zIndex:5}}>
           <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:18}}>
             <span style={{fontFamily:FM,fontSize:10,color:C.gold,letterSpacing:".18em",textTransform:"uppercase"}}>Fresher · Open to Work</span>
             <div style={{flex:1,height:1,background:C.gold,opacity:.28}}/>
@@ -283,10 +284,10 @@ function Hero(){
       </div>
  
       {/* Badge spacer */}
-      <div style={{height:76}}/>
+      <div className="hero-spacer" style={{height:76}}/>
  
       {/* Info strip */}
-      <div style={{display:"flex",justifyContent:"center",gap:56,padding:"20px 8vw",borderTop:`1px solid ${C.border}`}}>
+      <div className="hero-strip" style={{display:"flex",justifyContent:"center",gap:56,padding:"20px 8vw",borderTop:`1px solid ${C.border}`}}>
         {[["Degree","B.Tech AI & DS"],["College","SEC, Namakkal"],["Year","2022 – 2026"],["Status","Available"]].map(([k,v])=>(
           <div key={k} style={{textAlign:"center"}}>
             <div style={{fontSize:10,color:C.muted,letterSpacing:".14em",textTransform:"uppercase",marginBottom:4,fontFamily:FM}}>{k}</div>
@@ -301,8 +302,8 @@ function Hero(){
 /* ── About ────────────────────────────────────────────────── */
 function About(){
   return(
-    <section id="about" style={{background:C.bg,borderTop:`1px solid ${C.border}`,padding:"90px 8vw"}}>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8vw",alignItems:"start"}}>
+    <section id="about" className="sec" style={{background:C.bg,borderTop:`1px solid ${C.border}`,padding:"90px 8vw"}}>
+      <div className="grid-2" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8vw",alignItems:"start"}}>
         <Reveal>
           <SLabel>About Me</SLabel>
           <h2 style={{fontFamily:FH,fontSize:"clamp(26px,3.5vw,44px)",fontWeight:700,lineHeight:1.2,color:C.text,marginBottom:22,fontStyle:"italic"}}>
@@ -315,7 +316,7 @@ function About(){
         <Reveal delay={.15}>
           <h3 style={{fontFamily:FH,fontSize:"clamp(22px,3vw,36px)",fontWeight:700,lineHeight:1.2,color:C.text,marginBottom:14,fontStyle:"italic"}}>Any Opportunity<br/>& Collaboration<br/>Welcome.</h3>
           <p style={{fontSize:13,color:C.muted,marginBottom:30,fontFamily:FB}}>Let's build something meaningful together.</p>
-          <a href="mailto:tejas2005tp@gmail.com" style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"18px 0",borderTop:`1px solid ${C.border}`,borderBottom:`1px solid ${C.border}`,textDecoration:"none",color:C.gold,fontFamily:FH,fontSize:15,fontWeight:600,fontStyle:"italic",transition:"letter-spacing .3s"}}
+          <a className="mail-link" href="mailto:tejas2005tp@gmail.com" style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"18px 0",borderTop:`1px solid ${C.border}`,borderBottom:`1px solid ${C.border}`,textDecoration:"none",color:C.gold,fontFamily:FH,fontSize:15,fontWeight:600,fontStyle:"italic",transition:"letter-spacing .3s"}}
             onMouseEnter={e=>e.currentTarget.style.letterSpacing=".04em"}
             onMouseLeave={e=>e.currentTarget.style.letterSpacing="0"}
           >tejas2005tp@gmail.com <span style={{fontSize:20,fontStyle:"normal"}}>→</span></a>
@@ -337,14 +338,14 @@ function Skills(){
   const [active,setActive]=useState(null);
   const cats=[...new Set(SKILLS_DATA.map(s=>s.cat))];
   return(
-    <section id="skills" style={{background:C.bgDark,borderTop:`1px solid ${C.border}`,padding:"90px 8vw"}}>
+    <section id="skills" className="sec" style={{background:C.bgDark,borderTop:`1px solid ${C.border}`,padding:"90px 8vw"}}>
       <Reveal>
         <SLabel>Expertise</SLabel>
         <h2 style={{fontFamily:FH,fontSize:"clamp(30px,4vw,52px)",fontWeight:700,letterSpacing:"-1px",color:C.text,marginBottom:52,fontStyle:"italic"}}>
           Skills &<br/><span style={{WebkitTextStroke:`1.5px ${C.gold}`,color:"transparent"}}>Tools.</span>
         </h2>
       </Reveal>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:56,alignItems:"start"}}>
+      <div className="grid-2" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:56,alignItems:"start"}}>
         {/* Skill bars */}
         <Reveal delay={.05}>
           <div style={{display:"flex",flexDirection:"column",gap:14}}>
@@ -401,7 +402,7 @@ function SkillBar({name,level,cat,active,onHover,index}){
   return(
     <div ref={ref} onMouseEnter={()=>onHover(true)} onMouseLeave={()=>onHover(false)} style={{display:"flex",alignItems:"center",gap:13,padding:"9px 12px",borderRadius:8,background:active?`${C.gold}0c`:"transparent",border:`1px solid ${active?C.gold+"38":"transparent"}`,cursor:"default",transition:"all .3s"}}>
       <div style={{width:7,height:7,borderRadius:"50%",background:active?C.gold:C.subtle,flexShrink:0,boxShadow:active?`0 0 8px ${C.gold}`:"none",transition:"all .3s"}}/>
-      <span style={{fontFamily:FB,fontSize:13,color:active?C.text:C.muted,width:140,flexShrink:0,transition:"color .3s"}}>{name}</span>
+      <span className="skill-name" style={{fontFamily:FB,fontSize:13,color:active?C.text:C.muted,width:140,flexShrink:0,transition:"color .3s"}}>{name}</span>
       <div style={{flex:1,height:2,background:C.subtle,borderRadius:2}}>
         <div style={{height:"100%",borderRadius:2,background:active?`linear-gradient(90deg,${C.goldD},${C.gold})`:C.subtle,width:vis?`${level}%`:"0%",transition:`width .9s cubic-bezier(.16,1,.3,1) ${index*.04}s,background .3s`,boxShadow:active?`0 0 6px ${C.gold}70`:"none"}}/>
       </div>
@@ -412,12 +413,12 @@ function SkillBar({name,level,cat,active,onHover,index}){
 /* ── Works ────────────────────────────────────────────────── */
 function Works(){
   return(
-    <section id="works" style={{background:C.bg,borderTop:`1px solid ${C.border}`,padding:"90px 8vw"}}>
+    <section id="works" className="sec" style={{background:C.bg,borderTop:`1px solid ${C.border}`,padding:"90px 8vw"}}>
       <Reveal>
         <SLabel>Portfolio</SLabel>
         <h2 style={{fontFamily:FH,fontSize:"clamp(28px,4vw,50px)",fontWeight:700,letterSpacing:"-1px",color:C.text,marginBottom:52,fontStyle:"italic"}}>Selected Work.</h2>
       </Reveal>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,marginBottom:72}}>
+      <div className="grid-2" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,marginBottom:72}}>
         {PROJECTS.map((p,i)=><Reveal key={p.num} delay={i*.1}><ProjectCard {...p}/></Reveal>)}
       </div>
  
@@ -427,7 +428,7 @@ function Works(){
       </Reveal>
       {EXPERIENCE.map((e,i)=>(
         <Reveal key={i} delay={i*.08}>
-          <div style={{display:"grid",gridTemplateColumns:"220px 1fr",gap:40,padding:"36px 0",borderBottom:`1px solid ${C.border}`}}>
+          <div className="exp-row" style={{display:"grid",gridTemplateColumns:"220px 1fr",gap:40,padding:"36px 0",borderBottom:`1px solid ${C.border}`}}>
             <div>
               <div style={{fontSize:11,color:C.gold,letterSpacing:".08em",marginBottom:8,fontFamily:FM}}>{e.period}</div>
               <div style={{fontFamily:FH,fontSize:16,fontWeight:700,color:C.text,marginBottom:4,fontStyle:"italic"}}>{e.role}</div>
@@ -446,13 +447,13 @@ function Works(){
  
       {/* Education */}
       <Reveal delay={.15}>
-        <div style={{marginTop:40,background:C.card,border:`1px solid ${C.border}`,borderLeft:`4px solid ${C.gold}`,borderRadius:10,padding:"28px 32px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+        <div className="edu-card" style={{marginTop:40,background:C.card,border:`1px solid ${C.border}`,borderLeft:`4px solid ${C.gold}`,borderRadius:10,padding:"28px 32px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
           <div>
             <div style={{fontSize:10,color:C.gold,letterSpacing:".14em",textTransform:"uppercase",marginBottom:8,fontFamily:FM}}>2022 – 2026 · Education</div>
             <div style={{fontFamily:FH,fontSize:18,fontWeight:700,color:C.text,marginBottom:4,fontStyle:"italic"}}>B.Tech — Artificial Intelligence & Data Science</div>
             <div style={{fontSize:13,color:C.muted,fontFamily:FB}}>Sengunthar Engineering College, Tiruchengode, Namakkal</div>
           </div>
-          <div style={{textAlign:"right",flexShrink:0,marginLeft:24}}>
+          <div className="edu-cgpa" style={{textAlign:"right",flexShrink:0,marginLeft:24}}>
             <div style={{fontSize:10,color:C.muted,letterSpacing:".1em",textTransform:"uppercase",marginBottom:4,fontFamily:FM}}>CGPA</div>
             <div style={{fontFamily:FH,fontSize:40,fontWeight:700,color:C.gold,lineHeight:1,fontStyle:"italic"}}>8.0</div>
           </div>
@@ -483,8 +484,8 @@ function ProjectCard({num,title,stack,desc,link}){
 /* ── Contact ──────────────────────────────────────────────── */
 function Contact(){
   return(
-    <section id="contact" style={{background:C.bgDark,borderTop:`1px solid ${C.border}`,padding:"90px 8vw 80px"}}>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8vw",alignItems:"start"}}>
+    <section id="contact" className="sec" style={{background:C.bgDark,borderTop:`1px solid ${C.border}`,padding:"90px 8vw 80px"}}>
+      <div className="grid-2" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8vw",alignItems:"start"}}>
         <Reveal>
           <SLabel>Get In Touch</SLabel>
           <h2 style={{fontFamily:FH,fontSize:"clamp(36px,5.5vw,70px)",fontWeight:700,letterSpacing:"-1.5px",color:C.text,lineHeight:.95,marginBottom:22,fontStyle:"italic"}}>
@@ -540,7 +541,7 @@ function GoldBtn({children,primary,onClick}){
 /* ── Footer ───────────────────────────────────────────────── */
 function Footer(){
   return(
-    <footer style={{background:C.bg,borderTop:`1px solid ${C.border}`,padding:"20px 52px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+    <footer className="footer" style={{background:C.bg,borderTop:`1px solid ${C.border}`,padding:"20px 52px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
       <span style={{fontSize:11,color:C.subtle,fontFamily:FM}}>© 2025 Tejasvin M</span>
       <div style={{width:36,height:36,background:C.gold,borderRadius:4,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FH,fontWeight:700,fontSize:16,color:C.bgDark,fontStyle:"italic"}}>T.</div>
       <span style={{fontSize:11,color:C.subtle,fontFamily:FM}}>Built with React</span>
@@ -561,6 +562,45 @@ export default function Portfolio(){
         ::-webkit-scrollbar{width:3px;}
         ::-webkit-scrollbar-track{background:#0e0e0e;}
         ::-webkit-scrollbar-thumb{background:#c9a84c55;border-radius:4px;}
+        @media (max-width:1100px){
+          .hero-grid{grid-template-columns:1fr 1fr !important;grid-template-rows:auto auto;}
+          .hero-left{grid-column:1;grid-row:1;padding-top:40px;}
+          .hero-sidebar{display:none !important;}
+          .hero-photo{grid-column:2;grid-row:1 / span 2;padding:40px 6vw 0 0;align-self:center;}
+          .hero-photo-frame{height:70vh !important;max-height:640px;}
+          .hero-info{grid-column:1;grid-row:2;padding:30px 3vw 50px 6vw !important;}
+        }
+        @media (max-width:768px){
+          .nav{padding:0 20px !important;}
+          .nav-burger{display:flex !important;}
+          .nav-links{display:none !important;}
+          .nav-links.open{display:flex !important;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:rgba(14,14,14,0.98);border-bottom:1px solid #2a2a2a;padding:8px 0 14px;}
+          .nav-links.open button{padding:14px 24px !important;text-align:left;font-size:16px !important;}
+          .hero-sidebar{display:none !important;}
+          .hero-grid{display:flex !important;flex-direction:column;min-height:auto !important;padding-top:84px !important;}
+          .hero-left{padding:24px 20px 36px !important;}
+          .hero-tag{display:inline-block;line-height:1.7;font-size:10px !important;}
+          .hero-name{font-size:clamp(52px,15vw,80px) !important;}
+          .hero-photo{padding:0 20px !important;width:100%;max-width:420px;align-self:center;}
+          .hero-photo-frame{height:auto !important;aspect-ratio:4/5;max-height:none;}
+          .hero-info{padding:96px 20px 20px !important;}
+          .hero-info p{max-width:none !important;}
+          .hero-spacer{height:24px !important;}
+          .hero-strip{display:grid !important;grid-template-columns:1fr 1fr;gap:20px 16px !important;padding:22px 20px !important;}
+          .sec{padding:64px 20px !important;}
+          #contact.sec{padding:64px 20px 56px !important;}
+          .grid-2{grid-template-columns:1fr !important;gap:44px !important;}
+          .exp-row{grid-template-columns:1fr !important;gap:14px !important;padding:28px 0 !important;}
+          .edu-card{flex-direction:column;align-items:flex-start !important;gap:18px;padding:24px 22px !important;}
+          .edu-cgpa{text-align:left !important;margin-left:0 !important;}
+          .footer{padding:18px 20px !important;}
+          .mail-link{font-size:14px !important;word-break:break-all;gap:12px;}
+        }
+        @media (max-width:420px){
+          .skill-name{width:108px !important;font-size:12px !important;}
+          .hero-badges{gap:6px !important;}
+          .footer span{font-size:10px !important;}
+        }
       `}</style>
       <Nav/>
       <Hero/>
