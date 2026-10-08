@@ -25,40 +25,41 @@ const FM = "'JetBrains Mono', 'Courier New', monospace";                // code/
 const SKILLS_DATA = [
   { id:1,  name:"Python",            cat:"Programming",  level:90, color:"#c9a84c" },
   { id:2,  name:"SQL",               cat:"Programming",  level:85, color:"#e8d07a" },
-  { id:3,  name:"JavaScript",        cat:"Programming",  level:68, color:"#c9a84c" },
-  { id:4,  name:"Pandas / NumPy",    cat:"Data & Auto",  level:82, color:"#d4b85a" },
-  { id:5,  name:"ETL & Data Validation", cat:"Data & Auto", level:80, color:"#c9a84c" },
-  { id:6,  name:"Data Extraction",   cat:"Data & Auto",  level:78, color:"#e8d07a" },
-  { id:7,  name:"PostgreSQL",        cat:"Databases",    level:82, color:"#c9a84c" },
-  { id:8,  name:"MySQL",             cat:"Databases",    level:80, color:"#d4b85a" },
-  { id:9,  name:"MS SQL Server",     cat:"Databases",    level:75, color:"#e8d07a" },
-  { id:10, name:"CTEs & Window Fns", cat:"SQL & Opt.",   level:78, color:"#c9a84c" },
-  { id:11, name:"Query Optimization",cat:"SQL & Opt.",   level:75, color:"#d4b85a" },
-  { id:12, name:"REST APIs",         cat:"Web & Backend",level:72, color:"#c9a84c" },
-  { id:13, name:"Node.js / Express", cat:"Web & Backend",level:65, color:"#e8d07a" },
-  { id:14, name:"Git & GitHub",      cat:"Tools",        level:80, color:"#c9a84c" },
+  { id:3,  name:"JavaScript",        cat:"Programming",  level:70, color:"#c9a84c" },
+  { id:4,  name:"Django / DRF",      cat:"Frameworks",   level:80, color:"#d4b85a" },
+  { id:5,  name:"Flask",             cat:"Frameworks",   level:70, color:"#c9a84c" },
+  { id:6,  name:"Pandas / NumPy",    cat:"Data & Auto",  level:82, color:"#d4b85a" },
+  { id:7,  name:"ETL & Data Validation", cat:"Data & Auto", level:80, color:"#c9a84c" },
+  { id:8,  name:"Selenium / BS4",    cat:"Data & Auto",  level:76, color:"#e8d07a" },
+  { id:9,  name:"PostgreSQL",        cat:"Databases",    level:82, color:"#c9a84c" },
+  { id:10, name:"MySQL",             cat:"Databases",    level:80, color:"#d4b85a" },
+  { id:11, name:"MS SQL Server",     cat:"Databases",    level:75, color:"#e8d07a" },
+  { id:12, name:"MongoDB",           cat:"Databases",    level:66, color:"#c9a84c" },
+  { id:13, name:"REST APIs",         cat:"Web & Backend",level:78, color:"#c9a84c" },
+  { id:14, name:"Node.js / Express", cat:"Web & Backend",level:66, color:"#e8d07a" },
+  { id:15, name:"HTML / CSS / Bootstrap", cat:"Web & Backend",level:78, color:"#d4b85a" },
+  { id:16, name:"Celery & Redis",    cat:"Web & Backend",level:68, color:"#c9a84c" },
+  { id:17, name:"Git & GitHub",      cat:"Tools",        level:80, color:"#c9a84c" },
+  { id:18, name:"Docker",            cat:"Tools",        level:65, color:"#e8d07a" },
 ];
  
 const EXPERIENCE = [
   {
     period: "Jan 2026 – Apr 2026",
-    role: "Software Engineering Intern",
+    role: "MERN Stack Intern",
     company: "Innoknowvex, Bangalore",
     points: [
-      "Developed backend routing and database integration using REST APIs and MERN stack for data-driven web modules.",
-      "Built responsive web interfaces using HTML, CSS, and Bootstrap, integrating API data across application components.",
-      "Automated database querying workflows and implemented input validation, reducing query latency by 25%.",
-      "Diagnosed and resolved async data-handling issues between frontend, backend services, and databases.",
+      "Built responsive tourist-platform pages using HTML, CSS, JavaScript, and Bootstrap, integrating frontend components with backend services in a MERN application.",
+      "Optimized page structure and navigation for cross-device usability while handling UI-database data flow and resolving frontend rendering and integration issues.",
     ],
   },
   {
     period: "Jul 2025 – Aug 2025",
-    role: "Generative AI & ML Intern",
-    company: "Zephyr Technologies Pvt. Ltd., Bangalore",
+    role: "Generative AI Intern",
+    company: "Zephyr Technologies Pvt. Limited, Bangalore",
     points: [
-      "Developed modular Python automation scripts to extract, clean, and validate 100,000+ relational records, cutting preprocessing time by 30%.",
-      "Built automated ETL and data validation workflows to handle inconsistent records before ML model consumption.",
-      "Automated multi-source data ingestion and generated structured analytical reports using Python and SQL.",
+      "Applied Python and SQL to extract, clean, validate, and automate ingestion of relational datasets for AI/ML model evaluation and improved data consistency.",
+      "Built a traffic flow prediction model using weather data, Pandas, Random Forest, and Django; generated analytical reports on dataset quality and model-readiness.",
     ],
   },
 ];
@@ -66,9 +67,9 @@ const EXPERIENCE = [
 const PROJECTS = [
   {
     num: "01",
-    title: "Integrated Ad Bidding & Pricing Automation",
-    stack: ["Python", "SQL", "Analytics"],
-    desc: "Built Python automation pipelines to extract, clean, and validate bid transaction and clickstream data. Designed normalized relational schemas and developed SQL queries using CTEs and window functions to calculate pricing trends, impressions, and conversion metrics.",
+    title: "Automated Invoice / Document Processing & Analytics Platform",
+    stack: ["Python", "Django", "DRF", "PostgreSQL", "Celery", "Redis", "Docker"],
+    desc: "Built a Django REST Framework application for invoice PDF/image uploads, document extraction, validation, and PostgreSQL storage, with authentication, search, filtering, and pagination. Engineered asynchronous processing using Celery and Redis with status tracking, retries, and scheduled tasks; developed invoice analytics, optimized PostgreSQL queries, and deployed using Docker.",
   },
   {
     num: "02",
@@ -76,6 +77,12 @@ const PROJECTS = [
     stack: ["PostgreSQL", "MySQL", "MS SQL Server"],
     desc: "Designed a normalized relational database covering customers, tour packages, bookings, payments, hotels, guides, flights, and countries. Implemented PKs, FKs, composite keys, and junction tables following 3NF principles across 10 tables.",
      link: "https://github.com/TejasvinM/Europian_Travel_organization_Database",
+  },
+  {
+    num: "03",
+    title: "Web Scraper & Data Automation",
+    stack: ["Python", "Selenium", "BeautifulSoup", "Pandas"],
+    desc: "Automated dynamic web data extraction using Python, Selenium, and BeautifulSoup, achieving 95%+ extraction accuracy with exception handling and logging for reliability. Built Pandas workflows for data cleaning and validation, achieving 90%+ data accuracy with automated CSV/JSON export and reduced manual processing.",
   },
 ];
  
@@ -208,17 +215,17 @@ function Hero(){
  
         {/* LEFT — big name */}
         <div className="hero-left" style={{display:"flex",alignItems:"center",paddingLeft:"6vw",paddingBottom:50,zIndex:5}}>
-          <div>
-            <div style={{...a(.2),marginBottom:22}}>
+          <div className="hero-left-inner">
+            <div className="hero-tagwrap" style={{...a(.2),marginBottom:22}}>
               <span className="hero-tag" style={{fontFamily:FM,fontSize:11,color:C.gold,background:`${C.gold}12`,padding:"5px 14px",borderRadius:20,border:`1px solid ${C.gold}28`,letterSpacing:".08em"}}>
-                Python Developer · Data Automation · Backend
+                Python Developer · Full Stack · Backend
               </span>
             </div>
-            <div style={a(.38)}>
+            <div className="hero-namewrap" style={a(.38)}>
               <div className="hero-name" style={{fontFamily:FH,fontSize:"clamp(60px,8.5vw,112px)",fontWeight:700,lineHeight:.9,letterSpacing:"-2px",color:C.text,fontStyle:"italic"}}>Tejas</div>
               <div className="hero-name" style={{fontFamily:FH,fontSize:"clamp(60px,8.5vw,112px)",fontWeight:700,lineHeight:.9,letterSpacing:"-2px",WebkitTextStroke:`1.5px ${C.gold}`,color:"transparent",fontStyle:"italic",marginBottom:32}}>vin M.</div>
             </div>
-            <div style={{...a(.55),display:"flex",gap:10,flexWrap:"wrap"}}>
+            <div className="hero-btns" style={{...a(.55),display:"flex",gap:10,flexWrap:"wrap"}}>
               <GoldBtn primary onClick={()=>document.getElementById("contact")?.scrollIntoView({behavior:"smooth"})}>Contact Me</GoldBtn>
               <GoldBtn onClick={()=>document.getElementById("works")?.scrollIntoView({behavior:"smooth"})}>View Work →</GoldBtn>
             </div>
@@ -260,10 +267,10 @@ function Hero(){
             <div style={{flex:1,height:1,background:C.gold,opacity:.28}}/>
           </div>
           <p style={{fontFamily:FH,fontSize:19,fontWeight:600,color:C.text,lineHeight:1.45,marginBottom:16,fontStyle:"italic"}}>
-            Based in Bengaluru,<br/>I build Python automation,<br/>data pipelines & backend systems.
+            Based in Bengaluru,<br/>I build Python automation,<br/>Web Development & backend systems.
           </p>
           <p style={{fontSize:13,color:C.muted,lineHeight:1.85,marginBottom:26,maxWidth:270,fontFamily:FB}}>
-            Engineering graduate skilled in Python, SQL, ETL workflows, REST APIs, and relational database design. Ready to contribute from day one.
+            Engineering graduate skilled in Python, Django, SQL, REST APIs, the MERN stack, and relational database design. Ready to contribute from day one.
           </p>
           <div style={{display:"flex",flexDirection:"column",gap:7,marginBottom:26}}>
             {[["P","08940631803"],["E","tejas2005tp@gmail.com"]].map(([k,v])=>(
@@ -273,7 +280,7 @@ function Hero(){
             ))}
           </div>
           <div style={{display:"flex",gap:24,paddingTop:22,borderTop:`1px solid ${C.border}`}}>
-            {[["2","Internships"],["2","Projects"],["8","CGPA"]].map(([n,l])=>(
+            {[["2","Internships"],["3","Projects"],["8","CGPA"]].map(([n,l])=>(
               <div key={l}>
                 <div style={{fontFamily:FH,fontSize:34,fontWeight:700,color:C.gold,lineHeight:1,fontStyle:"italic"}}><Counter to={parseInt(n)}/></div>
                 <div style={{fontSize:10,color:C.muted,letterSpacing:".1em",textTransform:"uppercase",marginTop:4,fontFamily:FM}}>{l}</div>
@@ -310,7 +317,7 @@ function About(){
             You can't stop learning.<br/>The more you build,<br/><span style={{color:C.gold}}>the more you grow.</span>
           </h2>
           <p style={{fontSize:14,color:C.muted,lineHeight:1.95,maxWidth:440,fontFamily:FB}}>
-            Fresher-level engineering graduate with hands-on internship experience in Python development, data automation, SQL, and backend engineering. Skilled in building automation scripts, ETL workflows, and optimizing SQL queries across relational databases. Experienced with REST API development, database integration, and data-driven applications.
+            Python Developer with experience building a Django REST Framework platform (Celery, Redis, Docker), MERN stack applications, and Python/SQL pipelines for data extraction, cleaning, and validation. Optimized 400+ queries across relational databases. AI & Data Science graduate with exposure to Machine Learning and Generative AI.
           </p>
         </Reveal>
         <Reveal delay={.15}>
@@ -384,7 +391,7 @@ function Skills(){
           </div>
           {/* Mini stats */}
           <div style={{display:"flex",gap:28}}>
-            {[["14","Skills"],["5","Domains"],].map(([n,l])=>(
+            {[["18","Skills"],["6","Domains"],].map(([n,l])=>(
               <div key={l}>
                 <div style={{fontFamily:FH,fontSize:38,fontWeight:700,color:C.gold,lineHeight:1,fontStyle:"italic"}}>{n}</div>
                 <div style={{fontSize:10,color:C.muted,letterSpacing:".1em",textTransform:"uppercase",marginTop:4,fontFamily:FM}}>{l}</div>
@@ -418,7 +425,7 @@ function Works(){
         <SLabel>Portfolio</SLabel>
         <h2 style={{fontFamily:FH,fontSize:"clamp(28px,4vw,50px)",fontWeight:700,letterSpacing:"-1px",color:C.text,marginBottom:52,fontStyle:"italic"}}>Selected Work.</h2>
       </Reveal>
-      <div className="grid-2" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,marginBottom:72}}>
+      <div className="grid-2 proj-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16,marginBottom:72}}>
         {PROJECTS.map((p,i)=><Reveal key={p.num} delay={i*.1}><ProjectCard {...p}/></Reveal>)}
       </div>
  
@@ -492,7 +499,7 @@ function Contact(){
             Let's<br/><span style={{WebkitTextStroke:`1.5px ${C.gold}`,color:"transparent"}}>Work.</span>
           </h2>
           <p style={{fontSize:14,color:C.muted,lineHeight:1.85,maxWidth:360,marginBottom:36,fontFamily:FB}}>
-            Actively seeking entry-level roles in Python development, data automation, and backend engineering. Open to full-time roles, internships, and collaborations.
+            Actively seeking entry-level roles in Python development, web development, and backend engineering. Open to full-time roles, internships, and collaborations.
           </p>
           <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
             <GoldBtn primary onClick={()=>window.location.href="mailto:tejas2005tp@gmail.com"}>Say Hello →</GoldBtn>
@@ -570,6 +577,9 @@ export default function Portfolio(){
           .hero-photo-frame{height:70vh !important;max-height:640px;}
           .hero-info{grid-column:1;grid-row:2;padding:30px 3vw 50px 6vw !important;}
         }
+        @media (max-width:1100px){
+          .proj-grid{grid-template-columns:1fr 1fr !important;}
+        }
         @media (max-width:768px){
           .nav{padding:0 20px !important;}
           .nav-burger{display:flex !important;}
@@ -577,19 +587,26 @@ export default function Portfolio(){
           .nav-links.open{display:flex !important;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:rgba(14,14,14,0.98);border-bottom:1px solid #2a2a2a;padding:8px 0 14px;}
           .nav-links.open button{padding:14px 24px !important;text-align:left;font-size:16px !important;}
           .hero-sidebar{display:none !important;}
-          .hero-grid{display:flex !important;flex-direction:column;min-height:auto !important;padding-top:84px !important;}
-          .hero-left{padding:24px 20px 36px !important;}
+          .hero-grid{display:grid !important;grid-template-columns:1fr 46% !important;grid-template-rows:auto !important;column-gap:14px;min-height:auto !important;padding:88px 20px 0 !important;}
+          .hero-left,.hero-left-inner{display:contents !important;}
+          .hero-tagwrap{grid-column:1 / -1;grid-row:1;margin-bottom:20px !important;}
           .hero-tag{display:inline-block;line-height:1.7;font-size:10px !important;}
-          .hero-name{font-size:clamp(52px,15vw,80px) !important;}
-          .hero-photo{padding:0 20px !important;width:100%;max-width:420px;align-self:center;}
-          .hero-photo-frame{height:auto !important;aspect-ratio:4/5;max-height:none;}
-          .hero-info{padding:96px 20px 20px !important;}
+          .hero-namewrap{grid-column:1;grid-row:2;align-self:center;}
+          .hero-name{font-size:clamp(40px,12.5vw,62px) !important;letter-spacing:-1px !important;}
+          .hero-name + .hero-name{margin-bottom:0 !important;}
+          .hero-photo{grid-column:2;grid-row:2;padding:0 !important;display:flex !important;flex-direction:column;align-items:stretch !important;}
+          .hero-photo-frame{height:auto !important;aspect-ratio:3/4;max-height:none;}
+          .hero-badges{position:static !important;transform:none !important;justify-content:center;flex-wrap:nowrap;gap:6px !important;margin-top:12px;}
+          .hero-badges a>div{padding:7px 10px !important;gap:0 !important;}
+          .hero-btns{grid-column:1 / -1;grid-row:3;margin-top:24px;}
+          .hero-info{grid-column:1 / -1;grid-row:4;padding:36px 0 24px !important;}
           .hero-info p{max-width:none !important;}
-          .hero-spacer{height:24px !important;}
+          .hero-spacer{height:16px !important;}
           .hero-strip{display:grid !important;grid-template-columns:1fr 1fr;gap:20px 16px !important;padding:22px 20px !important;}
           .sec{padding:64px 20px !important;}
           #contact.sec{padding:64px 20px 56px !important;}
-          .grid-2{grid-template-columns:1fr !important;gap:44px !important;}
+          .grid-2,.proj-grid{grid-template-columns:1fr !important;gap:44px !important;}
+          .proj-grid{gap:16px !important;}
           .exp-row{grid-template-columns:1fr !important;gap:14px !important;padding:28px 0 !important;}
           .edu-card{flex-direction:column;align-items:flex-start !important;gap:18px;padding:24px 22px !important;}
           .edu-cgpa{text-align:left !important;margin-left:0 !important;}
@@ -597,8 +614,7 @@ export default function Portfolio(){
           .mail-link{font-size:14px !important;word-break:break-all;gap:12px;}
         }
         @media (max-width:420px){
-          .skill-name{width:108px !important;font-size:12px !important;}
-          .hero-badges{gap:6px !important;}
+          .skill-name{width:112px !important;font-size:12px !important;}
           .footer span{font-size:10px !important;}
         }
       `}</style>
