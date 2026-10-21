@@ -1,630 +1,529 @@
-import photo from "./assets/photo.jpg.png";
 import { useState, useEffect, useRef } from "react";
- 
-/* ── Palette ──────────────────────────────────────────────── */
-const C = {
-  bg:      "#161616",
-  bgDark:  "#0e0e0e",
-  surface: "#1a1a1a",
-  card:    "#202020",
-  border:  "#2a2a2a",
-  gold:    "#c9a84c",
-  goldL:   "#e8d07a",
-  goldD:   "#8a6e2f",
-  text:    "#f0ece4",
-  muted:   "#6b6b6b",
-  subtle:  "#2e2e2e",
-};
- 
-/* ── Typography — serif portfolio feel ───────────────────── */
-const FH = "'Playfair Display', 'Georgia', 'Times New Roman', serif";   // headings
-const FB = "'Lora', 'Georgia', 'Times New Roman', serif";               // body
-const FM = "'JetBrains Mono', 'Courier New', monospace";                // code/labels
- 
-/* ── Data (from new resume) ───────────────────────────────── */
-const SKILLS_DATA = [
-  { id:1,  name:"Python",            cat:"Programming",  level:90, color:"#c9a84c" },
-  { id:2,  name:"SQL",               cat:"Programming",  level:85, color:"#e8d07a" },
-  { id:3,  name:"JavaScript",        cat:"Programming",  level:70, color:"#c9a84c" },
-  { id:4,  name:"Django / DRF",      cat:"Frameworks",   level:80, color:"#d4b85a" },
-  { id:5,  name:"Flask",             cat:"Frameworks",   level:70, color:"#c9a84c" },
-  { id:6,  name:"Pandas / NumPy",    cat:"Data & Auto",  level:82, color:"#d4b85a" },
-  { id:7,  name:"ETL & Data Validation", cat:"Data & Auto", level:80, color:"#c9a84c" },
-  { id:8,  name:"Selenium / BS4",    cat:"Data & Auto",  level:76, color:"#e8d07a" },
-  { id:9,  name:"PostgreSQL",        cat:"Databases",    level:82, color:"#c9a84c" },
-  { id:10, name:"MySQL",             cat:"Databases",    level:80, color:"#d4b85a" },
-  { id:11, name:"MS SQL Server",     cat:"Databases",    level:75, color:"#e8d07a" },
-  { id:12, name:"MongoDB",           cat:"Databases",    level:66, color:"#c9a84c" },
-  { id:13, name:"REST APIs",         cat:"Web & Backend",level:78, color:"#c9a84c" },
-  { id:14, name:"Node.js / Express", cat:"Web & Backend",level:66, color:"#e8d07a" },
-  { id:15, name:"HTML / CSS / Bootstrap", cat:"Web & Backend",level:78, color:"#d4b85a" },
-  { id:16, name:"Celery & Redis",    cat:"Web & Backend",level:68, color:"#c9a84c" },
-  { id:17, name:"Git & GitHub",      cat:"Tools",        level:80, color:"#c9a84c" },
-  { id:18, name:"Docker",            cat:"Tools",        level:65, color:"#e8d07a" },
-];
- 
-const EXPERIENCE = [
-  {
-    period: "Jan 2026 – Apr 2026",
-    role: "MERN Stack Intern",
-    company: "Innoknowvex, Bangalore",
-    points: [
-      "Built responsive tourist-platform pages using HTML, CSS, JavaScript, and Bootstrap, integrating frontend components with backend services in a MERN application.",
-      "Optimized page structure and navigation for cross-device usability while handling UI-database data flow and resolving frontend rendering and integration issues.",
-    ],
-  },
-  {
-    period: "Jul 2025 – Aug 2025",
-    role: "Generative AI Intern",
-    company: "Zephyr Technologies Pvt. Limited, Bangalore",
-    points: [
-      "Applied Python and SQL to extract, clean, validate, and automate ingestion of relational datasets for AI/ML model evaluation and improved data consistency.",
-      "Built a traffic flow prediction model using weather data, Pandas, Random Forest, and Django; generated analytical reports on dataset quality and model-readiness.",
-    ],
-  },
-];
- 
-const PROJECTS = [
-  {
-    num: "01",
-    title: "Automated Invoice / Document Processing & Analytics Platform",
-    stack: ["Python", "Django", "DRF", "PostgreSQL", "Celery", "Redis", "Docker"],
-    desc: "Built a Django REST Framework application for invoice PDF/image uploads, document extraction, validation, and PostgreSQL storage, with authentication, search, filtering, and pagination. Engineered asynchronous processing using Celery and Redis with status tracking, retries, and scheduled tasks; developed invoice analytics, optimized PostgreSQL queries, and deployed using Docker.",
-  },
-  {
-    num: "02",
-    title: "European Travel Organization — Relational DB",
-    stack: ["PostgreSQL", "MySQL", "MS SQL Server"],
-    desc: "Designed a normalized relational database covering customers, tour packages, bookings, payments, hotels, guides, flights, and countries. Implemented PKs, FKs, composite keys, and junction tables following 3NF principles across 10 tables.",
-     link: "https://github.com/TejasvinM/Europian_Travel_organization_Database",
-  },
-  {
-    num: "03",
-    title: "Web Scraper & Data Automation",
-    stack: ["Python", "Selenium", "BeautifulSoup", "Pandas"],
-    desc: "Automated dynamic web data extraction using Python, Selenium, and BeautifulSoup, achieving 95%+ extraction accuracy with exception handling and logging for reliability. Built Pandas workflows for data cleaning and validation, achieving 90%+ data accuracy with automated CSV/JSON export and reduced manual processing.",
-  },
-];
- 
-const SOCIALS = [
-  { label:"LinkedIn",  short:"in", color:"#0077b5", href:"https://linkedin.com/in/tejju",  icon:"in" },
-  { label:"GitHub",    short:"gh", color:"#6e40c9", href:"https://github.com/TejasvinM",   icon:"gh" },
-  { label:"Instagram", short:"ig", color:"#e1306c", href:"https://www.instagram.com/_tejju.__?igsi=bm5wcXpuYXN0aDFz",  icon:"ig" },
-];
- 
-/* ── Helpers ──────────────────────────────────────────────── */
-function useInView(t=0.1){
-  const ref=useRef(); const [vis,setVis]=useState(false);
-  useEffect(()=>{
-    const obs=new IntersectionObserver(([e])=>{if(e.isIntersecting){setVis(true);obs.disconnect();}},{threshold:t});
-    if(ref.current)obs.observe(ref.current); return()=>obs.disconnect();
-  },[]);
-  return [ref,vis];
-}
-function Reveal({children,delay=0,y=28}){
-  const [ref,vis]=useInView();
-  return <div ref={ref} style={{opacity:vis?1:0,transform:vis?"translateY(0)":`translateY(${y}px)`,transition:`opacity .85s cubic-bezier(.16,1,.3,1) ${delay}s,transform .85s cubic-bezier(.16,1,.3,1) ${delay}s`}}>{children}</div>;
-}
-function Counter({to}){
-  const [val,setVal]=useState(0); const [ref,vis]=useInView(0.5);
-  useEffect(()=>{
-    if(!vis)return; let v=0,step=Math.ceil(to/50);
-    const id=setInterval(()=>{v=Math.min(v+step,to);setVal(v);if(v>=to)clearInterval(id);},22);
-    return()=>clearInterval(id);
-  },[vis,to]);
-  return <span ref={ref}>{val}</span>;
-}
- 
-/* ── Gold divider ─────────────────────────────────────────── */
-function GDivider(){
-  return <div style={{width:"100%",height:1,background:`linear-gradient(90deg,transparent,${C.gold},transparent)`,opacity:.25}}/>;
-}
- 
-/* ── Section label ────────────────────────────────────────── */
-function SLabel({children}){
-  return(
-    <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:12}}>
-      <span style={{fontFamily:FM,fontSize:11,color:C.gold,letterSpacing:".2em",textTransform:"uppercase"}}>{children}</span>
-      <div style={{flex:1,height:1,background:`linear-gradient(90deg,${C.gold}50,transparent)`,maxWidth:120}}/>
+import "./portfolio.css";
+import photo from "./assets/photo.jpg.png";
+import meCartoon from "./assets/me-cartoon.png";
+import meScooterShirt from "./assets/me-scooter-shirt.png";
+import { Sparkle, Pencil, Cursor, Coin, Auto, Rider, Chai, Phone, CurlyArrow, Squiggle, InvoiceArt, TravelArt, ScraperArt, KovaiArt } from "./Doodles.jsx";
+
+/* ── Content ──────────────────────────────────────────────── */
+const NAME = "TEJASVIN";
+const GREETINGS = ["Vanakkam, I'm", "Hey, I'm"];
+const EMAIL = "tejas2005tp@gmail.com";
+
+/* ── Draggable sticker ────────────────────────────────────── */
+function Sticker({ className, children, delay = 0 }) {
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const [drag, setDrag] = useState(false);
+  const start = useRef(null);
+  const down = (e) => {
+    e.currentTarget.setPointerCapture(e.pointerId);
+    start.current = { mx: e.clientX, my: e.clientY, x: pos.x, y: pos.y };
+    setDrag(true);
+  };
+  const move = (e) => {
+    if (!start.current) return;
+    setPos({ x: start.current.x + e.clientX - start.current.mx, y: start.current.y + e.clientY - start.current.my });
+  };
+  const up = () => { start.current = null; setDrag(false); };
+  return (
+    <div
+      className={`sticker ${className} ${drag ? "dragging" : ""}`}
+      style={{ "--dx": `${pos.x}px`, "--dy": `${pos.y}px`, "--d": `${delay}s` }}
+      onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}
+    >
+      <div className="sticker-bob">{children}</div>
     </div>
   );
 }
- 
+
+/* ── Scroll reveal ────────────────────────────────────────── */
+function useInView(threshold = 0.2) {
+  const ref = useRef(null);
+  const [vis, setVis] = useState(false);
+  useEffect(() => {
+    const el = ref.current; if (!el) return;
+    const ob = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVis(true); ob.disconnect(); } }, { threshold });
+    ob.observe(el); return () => ob.disconnect();
+  }, [threshold]);
+  return [ref, vis];
+}
+function Reveal({ as: Tag = "div", className = "", delay = 0, style, children, ...rest }) {
+  const [ref, vis] = useInView(0.15);
+  return <Tag ref={ref} className={`reveal ${vis ? "in" : ""} ${className}`} style={{ "--rd": `${delay}s`, ...style }} {...rest}>{children}</Tag>;
+}
+
 /* ── Nav ──────────────────────────────────────────────────── */
-function Nav(){
-  const [sc,setSc]=useState(false);
-  const [open,setOpen]=useState(false);
-  useEffect(()=>{const fn=()=>setSc(window.scrollY>30);window.addEventListener("scroll",fn);return()=>window.removeEventListener("scroll",fn);},[]);
-  const go=id=>{setOpen(false);document.getElementById(id)?.scrollIntoView({behavior:"smooth"});};
-  return(
-    <nav className={`nav${sc?" nav-sc":""}`} style={{position:"fixed",top:0,left:0,right:0,zIndex:300,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 52px",height:64,background:sc?"rgba(14,14,14,0.96)":"transparent",backdropFilter:sc?"blur(20px)":"none",borderBottom:sc?`1px solid ${C.border}`:"none",transition:"all .4s ease"}}>
-      <div style={{width:40,height:40,background:C.gold,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FH,fontWeight:700,fontSize:17,color:C.bgDark,cursor:"pointer",borderRadius:4}} onClick={()=>go("home")}>T.</div>
-      <div className={`nav-links${open?" open":""}`} style={{display:"flex",gap:4}}>
-        {["Home","About","Skills","Works","Contact"].map(l=>(
-          <button key={l} onClick={()=>go(l.toLowerCase())} style={{background:"none",border:"none",cursor:"pointer",fontFamily:FB,fontSize:14,color:C.muted,padding:"6px 16px",transition:"color .2s",letterSpacing:".02em"}}
-            onMouseEnter={e=>e.currentTarget.style.color=C.gold}
-            onMouseLeave={e=>e.currentTarget.style.color=C.muted}
-          >{l}</button>
-        ))}
-      </div>
-      <div style={{display:"flex",gap:8}}>
-        <div className="nav-burger" onClick={()=>setOpen(o=>!o)} style={{width:36,height:36,border:`1px solid ${C.border}`,borderRadius:4,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:5,cursor:"pointer"}}
-          onMouseEnter={e=>e.currentTarget.style.borderColor=C.gold}
-          onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}
-        >
-          {[0,1].map(i=><div key={i} style={{width:14,height:1.5,background:C.text,borderRadius:1}}/>)}
+function Nav() {
+  const [active, setActive] = useState("home");
+  const [open, setOpen] = useState(false);
+  const links = ["Home", "About", "Work", "Experience"];
+  useEffect(() => {
+    const ids = ["home", "about", "work", "experience", "contact"];
+    const fn = () => {
+      let cur = "home";
+      ids.forEach((id) => { const el = document.getElementById(id); if (el && el.getBoundingClientRect().top < 140) cur = id; });
+      setActive(cur);
+    };
+    window.addEventListener("scroll", fn); fn();
+    return () => window.removeEventListener("scroll", fn);
+  }, []);
+  const go = (id) => { setOpen(false); document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); };
+  return (
+    <nav className="nav">
+      <div className="nav-inner">
+        <button className="logo" onClick={() => go("home")} aria-label="Home">TM</button>
+        <div className={`nav-links ${open ? "open" : ""}`}>
+          {links.map((l) => (
+            <button key={l} className={`nav-link ${active === l.toLowerCase() ? "active" : ""}`} onClick={() => go(l.toLowerCase())}>{l}</button>
+          ))}
+          <button className="btn btn-orange nav-cta-mobile" onClick={() => go("contact")}>LET'S TALK</button>
         </div>
+        <button className="btn btn-orange nav-cta" onClick={() => go("contact")}>LET'S TALK</button>
+        <button className={`burger ${open ? "x" : ""}`} onClick={() => setOpen((o) => !o)} aria-label="Menu"><span /><span /></button>
       </div>
     </nav>
   );
 }
- 
-/* ── Social Badge ─────────────────────────────────────────── */
-function SocialBadge({label,color,href,icon,delay=0}){
-  const [hov,setHov]=useState(false);
-  const [loaded,setLoaded]=useState(false);
-  useEffect(()=>{const t=setTimeout(()=>setLoaded(true),delay*1000+200);return()=>clearTimeout(t);},[delay]);
-  return(
-    <a href={href} target="_blank" rel="noreferrer" style={{textDecoration:"none"}}>
-      <div onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)} style={{
-        display:"flex",alignItems:"center",gap:8,
-        padding:hov?"9px 18px":"9px 13px",
-        background:hov?color:C.card,
-        border:`1px solid ${hov?color:C.border}`,
-        borderRadius:40,cursor:"pointer",
-        boxShadow:hov?`0 6px 24px ${color}50`:`0 2px 10px rgba(0,0,0,.4)`,
-        transform:loaded?(hov?"translateY(-4px) scale(1.06)":"translateY(0) scale(1)"):"translateY(16px) scale(.85)",
-        opacity:loaded?1:0,
-        transition:"all .35s cubic-bezier(.16,1,.3,1)",
-        whiteSpace:"nowrap",
-      }}>
-        <span style={{fontFamily:FM,fontSize:11,fontWeight:600,color:hov?"#fff":C.gold,letterSpacing:".06em"}}>{icon}</span>
-        <span style={{fontFamily:FB,fontSize:12,fontWeight:600,color:hov?"#fff":C.muted,maxWidth:hov?80:0,overflow:"hidden",transition:"max-width .3s ease",display:"inline-block"}}>{label}</span>
-      </div>
-    </a>
-  );
-}
- 
+
 /* ── Hero ─────────────────────────────────────────────────── */
-function Hero(){
-  const [loaded,setLoaded]=useState(false);
-  useEffect(()=>{const t=setTimeout(()=>setLoaded(true),80);return()=>clearTimeout(t);},[]);
-  const a=(d,x=0,y=22)=>({opacity:loaded?1:0,transform:loaded?"translate(0,0)":`translate(${x}px,${y}px)`,transition:`opacity .9s cubic-bezier(.16,1,.3,1) ${d}s,transform .9s cubic-bezier(.16,1,.3,1) ${d}s`});
- 
-  return(
-    <section id="home" style={{minHeight:"100vh",background:C.bgDark,position:"relative",overflow:"hidden"}}>
-      {/* Ambient glow */}
-      <div style={{position:"absolute",top:"15%",left:"18%",width:480,height:480,borderRadius:"50%",background:`radial-gradient(circle,${C.gold}06 0%,transparent 65%)`,pointerEvents:"none"}}/>
-      <div style={{position:"absolute",bottom:"10%",right:"12%",width:320,height:320,borderRadius:"50%",background:`radial-gradient(circle,${C.gold}05 0%,transparent 65%)`,pointerEvents:"none"}}/>
- 
-      {/* Social sidebar */}
-      <div className="hero-sidebar" style={{...a(1.1),position:"absolute",left:26,bottom:110,zIndex:10,display:"flex",flexDirection:"column",alignItems:"center",gap:14}}>
-        {SOCIALS.map(s=>(
-          <a key={s.label} href={s.href} target="_blank" rel="noreferrer" style={{textDecoration:"none"}}>
-            <div style={{width:32,height:32,borderRadius:6,background:C.surface,border:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,color:C.muted,fontFamily:FM,letterSpacing:".05em",cursor:"pointer",transition:"all .25s"}}
-              onMouseEnter={e=>{e.currentTarget.style.background=s.color;e.currentTarget.style.borderColor=s.color;e.currentTarget.style.color="#fff";e.currentTarget.style.transform="scale(1.12)";}}
-              onMouseLeave={e=>{e.currentTarget.style.background=C.surface;e.currentTarget.style.borderColor=C.border;e.currentTarget.style.color=C.muted;e.currentTarget.style.transform="scale(1)";}}
-            >{s.short.toUpperCase()}</div>
-          </a>
-        ))}
-        <div style={{width:1,height:44,background:C.border,marginTop:4}}/>
-      </div>
- 
-      {/* 3-col hero grid */}
-      <div className="hero-grid" style={{display:"grid",gridTemplateColumns:"1fr 400px 360px",minHeight:"calc(100vh - 100px)",paddingTop:64}}>
- 
-        {/* LEFT — big name */}
-        <div className="hero-left" style={{display:"flex",alignItems:"center",paddingLeft:"6vw",paddingBottom:50,zIndex:5}}>
-          <div className="hero-left-inner">
-            <div className="hero-tagwrap" style={{...a(.2),marginBottom:22}}>
-              <span className="hero-tag" style={{fontFamily:FM,fontSize:11,color:C.gold,background:`${C.gold}12`,padding:"5px 14px",borderRadius:20,border:`1px solid ${C.gold}28`,letterSpacing:".08em"}}>
-                Python Developer · Full Stack · Backend
-              </span>
-            </div>
-            <div className="hero-namewrap" style={a(.38)}>
-              <div className="hero-name" style={{fontFamily:FH,fontSize:"clamp(60px,8.5vw,112px)",fontWeight:700,lineHeight:.9,letterSpacing:"-2px",color:C.text,fontStyle:"italic"}}>Tejas</div>
-              <div className="hero-name" style={{fontFamily:FH,fontSize:"clamp(60px,8.5vw,112px)",fontWeight:700,lineHeight:.9,letterSpacing:"-2px",WebkitTextStroke:`1.5px ${C.gold}`,color:"transparent",fontStyle:"italic",marginBottom:32}}>vin M.</div>
-            </div>
-            <div className="hero-btns" style={{...a(.55),display:"flex",gap:10,flexWrap:"wrap"}}>
-              <GoldBtn primary onClick={()=>document.getElementById("contact")?.scrollIntoView({behavior:"smooth"})}>Contact Me</GoldBtn>
-              <GoldBtn onClick={()=>document.getElementById("works")?.scrollIntoView({behavior:"smooth"})}>View Work →</GoldBtn>
-            </div>
-          </div>
-        </div>
- 
-        {/* CENTER — photo */}
-        <div className="hero-photo" style={{...a(.52,0,0),display:"flex",alignItems:"flex-end",justifyContent:"center",zIndex:6,position:"relative"}}>
-          <div className="hero-photo-frame" style={{width:"100%",height:"80vh",background:`linear-gradient(170deg,#242424 0%,#161616 100%)`,position:"relative",overflow:"hidden",borderTop:`3px solid ${C.gold}`}}>
-            {/* Placeholder */}
-            <img
-  src={photo}
-  alt="Tejasvin M"
-  style={{
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
-    objectPosition: "center top",
-    display: "block",
-  }}
-/>
-            {/* Corner accent */}
-            <div style={{position:"absolute",top:0,right:0,width:50,height:50,borderRight:`2px solid ${C.gold}`,borderTop:`2px solid ${C.gold}`,opacity:.4}}/>
-            <div style={{position:"absolute",top:14,right:14,width:7,height:7,borderRadius:"50%",background:C.gold,opacity:.6}}/>
-            {/* Bottom fade */}
-            <div style={{position:"absolute",bottom:0,left:0,right:0,height:90,background:`linear-gradient(to top,${C.bgDark},transparent)`}}/>
-          </div>
- 
-          {/* Animated badges below photo */}
-          <div className="hero-badges" style={{position:"absolute",bottom:-54,left:"50%",transform:"translateX(-50%)",display:"flex",gap:10,zIndex:20}}>
-            {SOCIALS.map((s,i)=><SocialBadge key={s.label} {...s} delay={.7+i*.12}/>)}
-          </div>
-        </div>
- 
-        {/* RIGHT — info */}
-        <div className="hero-info" style={{...a(.72,18,0),display:"flex",flexDirection:"column",justifyContent:"center",padding:"0 4vw 50px 3vw",zIndex:5}}>
-          <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:18}}>
-            <span style={{fontFamily:FM,fontSize:10,color:C.gold,letterSpacing:".18em",textTransform:"uppercase"}}>Fresher · Open to Work</span>
-            <div style={{flex:1,height:1,background:C.gold,opacity:.28}}/>
-          </div>
-          <p style={{fontFamily:FH,fontSize:19,fontWeight:600,color:C.text,lineHeight:1.45,marginBottom:16,fontStyle:"italic"}}>
-            Based in Bengaluru,<br/>I build Python automation,<br/>Web Development & backend systems.
-          </p>
-          <p style={{fontSize:13,color:C.muted,lineHeight:1.85,marginBottom:26,maxWidth:270,fontFamily:FB}}>
-            Engineering graduate skilled in Python, Django, SQL, REST APIs, the MERN stack, and relational database design. Ready to contribute from day one.
-          </p>
-          <div style={{display:"flex",flexDirection:"column",gap:7,marginBottom:26}}>
-            {[["P","08940631803"],["E","tejas2005tp@gmail.com"]].map(([k,v])=>(
-              <div key={k} style={{fontSize:12,color:C.muted,fontFamily:FM,display:"flex",gap:10}}>
-                <span style={{color:C.gold,fontWeight:600}}>{k}</span>{v}
-              </div>
-            ))}
-          </div>
-          <div style={{display:"flex",gap:24,paddingTop:22,borderTop:`1px solid ${C.border}`}}>
-            {[["2","Internships"],["3","Projects"],["8","CGPA"]].map(([n,l])=>(
-              <div key={l}>
-                <div style={{fontFamily:FH,fontSize:34,fontWeight:700,color:C.gold,lineHeight:1,fontStyle:"italic"}}><Counter to={parseInt(n)}/></div>
-                <div style={{fontSize:10,color:C.muted,letterSpacing:".1em",textTransform:"uppercase",marginTop:4,fontFamily:FM}}>{l}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
- 
-      {/* Badge spacer */}
-      <div className="hero-spacer" style={{height:76}}/>
- 
-      {/* Info strip */}
-      <div className="hero-strip" style={{display:"flex",justifyContent:"center",gap:56,padding:"20px 8vw",borderTop:`1px solid ${C.border}`}}>
-        {[["Degree","B.Tech AI & DS"],["College","SEC, Namakkal"],["Year","2022 – 2026"],["Status","Available"]].map(([k,v])=>(
-          <div key={k} style={{textAlign:"center"}}>
-            <div style={{fontSize:10,color:C.muted,letterSpacing:".14em",textTransform:"uppercase",marginBottom:4,fontFamily:FM}}>{k}</div>
-            <div style={{fontSize:13,color:C.gold,fontWeight:600,fontFamily:FB}}>{v}</div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
- 
-/* ── About ────────────────────────────────────────────────── */
-function About(){
-  return(
-    <section id="about" className="sec" style={{background:C.bg,borderTop:`1px solid ${C.border}`,padding:"90px 8vw"}}>
-      <div className="grid-2" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8vw",alignItems:"start"}}>
-        <Reveal>
-          <SLabel>About Me</SLabel>
-          <h2 style={{fontFamily:FH,fontSize:"clamp(26px,3.5vw,44px)",fontWeight:700,lineHeight:1.2,color:C.text,marginBottom:22,fontStyle:"italic"}}>
-            You can't stop learning.<br/>The more you build,<br/><span style={{color:C.gold}}>the more you grow.</span>
-          </h2>
-          <p style={{fontSize:14,color:C.muted,lineHeight:1.95,maxWidth:440,fontFamily:FB}}>
-            Python Developer with experience building a Django REST Framework platform (Celery, Redis, Docker), MERN stack applications, and Python/SQL pipelines for data extraction, cleaning, and validation. Optimized 400+ queries across relational databases. AI & Data Science graduate with exposure to Machine Learning and Generative AI.
-          </p>
-        </Reveal>
-        <Reveal delay={.15}>
-          <h3 style={{fontFamily:FH,fontSize:"clamp(22px,3vw,36px)",fontWeight:700,lineHeight:1.2,color:C.text,marginBottom:14,fontStyle:"italic"}}>Any Opportunity<br/>& Collaboration<br/>Welcome.</h3>
-          <p style={{fontSize:13,color:C.muted,marginBottom:30,fontFamily:FB}}>Let's build something meaningful together.</p>
-          <a className="mail-link" href="mailto:tejas2005tp@gmail.com" style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"18px 0",borderTop:`1px solid ${C.border}`,borderBottom:`1px solid ${C.border}`,textDecoration:"none",color:C.gold,fontFamily:FH,fontSize:15,fontWeight:600,fontStyle:"italic",transition:"letter-spacing .3s"}}
-            onMouseEnter={e=>e.currentTarget.style.letterSpacing=".04em"}
-            onMouseLeave={e=>e.currentTarget.style.letterSpacing="0"}
-          >tejas2005tp@gmail.com <span style={{fontSize:20,fontStyle:"normal"}}>→</span></a>
-          <div style={{marginTop:36,display:"flex",alignItems:"baseline",gap:14}}>
-            <span style={{fontFamily:FH,fontSize:68,fontWeight:700,color:C.gold,lineHeight:1,fontStyle:"italic"}}><Counter to={2}/></span>
-            <div>
-              <div style={{fontSize:14,color:C.text,fontWeight:600,fontFamily:FB}}>Internships</div>
-              <div style={{fontSize:12,color:C.muted,fontFamily:FB}}>Completed</div>
-            </div>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
- 
-/* ── Skills ───────────────────────────────────────────────── */
-function Skills(){
-  const [active,setActive]=useState(null);
-  const cats=[...new Set(SKILLS_DATA.map(s=>s.cat))];
-  return(
-    <section id="skills" className="sec" style={{background:C.bgDark,borderTop:`1px solid ${C.border}`,padding:"90px 8vw"}}>
-      <Reveal>
-        <SLabel>Expertise</SLabel>
-        <h2 style={{fontFamily:FH,fontSize:"clamp(30px,4vw,52px)",fontWeight:700,letterSpacing:"-1px",color:C.text,marginBottom:52,fontStyle:"italic"}}>
-          Skills &<br/><span style={{WebkitTextStroke:`1.5px ${C.gold}`,color:"transparent"}}>Tools.</span>
-        </h2>
-      </Reveal>
-      <div className="grid-2" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:56,alignItems:"start"}}>
-        {/* Skill bars */}
-        <Reveal delay={.05}>
-          <div style={{display:"flex",flexDirection:"column",gap:14}}>
-            {SKILLS_DATA.map((sk,i)=><SkillBar key={sk.id} {...sk} index={i} active={active===sk.id} onHover={v=>setActive(v?sk.id:null)}/>)}
-          </div>
-        </Reveal>
-        {/* Right panel */}
-        <Reveal delay={.15}>
-          {/* Category pills */}
-          <div style={{display:"flex",flexWrap:"wrap",gap:9,marginBottom:40}}>
-            {cats.map(cat=>{
-              const items=SKILLS_DATA.filter(s=>s.cat===cat);
-              const isActive=active&&items.find(s=>s.id===active);
-              return(
-                <div key={cat} style={{padding:"7px 16px",background:isActive?`${C.gold}15`:C.surface,border:`1px solid ${isActive?C.gold+"55":C.border}`,borderRadius:40,fontSize:12,color:isActive?C.text:C.muted,fontFamily:FM,letterSpacing:".06em",transition:"all .3s",cursor:"default",display:"flex",alignItems:"center",gap:8}}>
-                  <div style={{width:5,height:5,borderRadius:"50%",background:isActive?C.gold:C.subtle,transition:"background .3s"}}/>
-                  {cat} <span style={{fontSize:10,color:C.muted}}>({items.length})</span>
-                </div>
-              );
-            })}
-          </div>
-          {/* Spotlight */}
-          <div style={{background:active?`${C.gold}0a`:C.surface,border:`1px solid ${active?C.gold+"40":C.border}`,borderRadius:12,padding:"26px 28px",transition:"all .4s ease",marginBottom:32,minHeight:96,display:"flex",flexDirection:"column",justifyContent:"center"}}>
-            {active?(()=>{
-              const sk=SKILLS_DATA.find(s=>s.id===active);
-              return(<>
-                <div style={{fontSize:10,color:C.gold,letterSpacing:".15em",textTransform:"uppercase",fontFamily:FM,marginBottom:7}}>{sk.cat}</div>
-                <div style={{fontFamily:FH,fontSize:24,fontWeight:700,color:C.text,marginBottom:10,fontStyle:"italic"}}>{sk.name}</div>
-                <div style={{display:"flex",alignItems:"center",gap:12}}>
-                  <div style={{flex:1,height:3,background:C.border,borderRadius:3}}>
-                    <div style={{height:"100%",width:`${sk.level}%`,background:`linear-gradient(90deg,${C.goldD},${C.gold})`,borderRadius:3,transition:"width .6s ease"}}/>
-                  </div>
-                </div>
-              </>);
-            })():<p style={{fontSize:13,color:C.muted,fontFamily:FM}}>← Hover a skill to inspect</p>}
-          </div>
-          {/* Mini stats */}
-          <div style={{display:"flex",gap:28}}>
-            {[["18","Skills"],["6","Domains"],].map(([n,l])=>(
-              <div key={l}>
-                <div style={{fontFamily:FH,fontSize:38,fontWeight:700,color:C.gold,lineHeight:1,fontStyle:"italic"}}>{n}</div>
-                <div style={{fontSize:10,color:C.muted,letterSpacing:".1em",textTransform:"uppercase",marginTop:4,fontFamily:FM}}>{l}</div>
-              </div>
-            ))}
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
- 
-function SkillBar({name,level,cat,active,onHover,index}){
-  const [ref,vis]=useInView(0.05);
-  return(
-    <div ref={ref} onMouseEnter={()=>onHover(true)} onMouseLeave={()=>onHover(false)} style={{display:"flex",alignItems:"center",gap:13,padding:"9px 12px",borderRadius:8,background:active?`${C.gold}0c`:"transparent",border:`1px solid ${active?C.gold+"38":"transparent"}`,cursor:"default",transition:"all .3s"}}>
-      <div style={{width:7,height:7,borderRadius:"50%",background:active?C.gold:C.subtle,flexShrink:0,boxShadow:active?`0 0 8px ${C.gold}`:"none",transition:"all .3s"}}/>
-      <span className="skill-name" style={{fontFamily:FB,fontSize:13,color:active?C.text:C.muted,width:140,flexShrink:0,transition:"color .3s"}}>{name}</span>
-      <div style={{flex:1,height:2,background:C.subtle,borderRadius:2}}>
-        <div style={{height:"100%",borderRadius:2,background:active?`linear-gradient(90deg,${C.goldD},${C.gold})`:C.subtle,width:vis?`${level}%`:"0%",transition:`width .9s cubic-bezier(.16,1,.3,1) ${index*.04}s,background .3s`,boxShadow:active?`0 0 6px ${C.gold}70`:"none"}}/>
-      </div>
-    </div>
-  );
-}
- 
-/* ── Works ────────────────────────────────────────────────── */
-function Works(){
-  return(
-    <section id="works" className="sec" style={{background:C.bg,borderTop:`1px solid ${C.border}`,padding:"90px 8vw"}}>
-      <Reveal>
-        <SLabel>Portfolio</SLabel>
-        <h2 style={{fontFamily:FH,fontSize:"clamp(28px,4vw,50px)",fontWeight:700,letterSpacing:"-1px",color:C.text,marginBottom:52,fontStyle:"italic"}}>Selected Work.</h2>
-      </Reveal>
-      <div className="grid-2 proj-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16,marginBottom:72}}>
-        {PROJECTS.map((p,i)=><Reveal key={p.num} delay={i*.1}><ProjectCard {...p}/></Reveal>)}
-      </div>
- 
-      <Reveal>
-        <SLabel>Career</SLabel>
-        <h2 style={{fontFamily:FH,fontSize:"clamp(24px,3vw,40px)",fontWeight:700,letterSpacing:"-1px",color:C.text,marginBottom:36,fontStyle:"italic"}}>Experience.</h2>
-      </Reveal>
-      {EXPERIENCE.map((e,i)=>(
-        <Reveal key={i} delay={i*.08}>
-          <div className="exp-row" style={{display:"grid",gridTemplateColumns:"220px 1fr",gap:40,padding:"36px 0",borderBottom:`1px solid ${C.border}`}}>
-            <div>
-              <div style={{fontSize:11,color:C.gold,letterSpacing:".08em",marginBottom:8,fontFamily:FM}}>{e.period}</div>
-              <div style={{fontFamily:FH,fontSize:16,fontWeight:700,color:C.text,marginBottom:4,fontStyle:"italic"}}>{e.role}</div>
-              <div style={{fontSize:12,color:C.muted,fontFamily:FB}}>{e.company}</div>
-            </div>
-            <ul style={{listStyle:"none",padding:0}}>
-              {e.points.map((p,j)=>(
-                <li key={j} style={{display:"flex",gap:10,alignItems:"flex-start",fontSize:13,color:C.muted,lineHeight:1.85,marginBottom:9,fontFamily:FB}}>
-                  <span style={{color:C.gold,fontSize:7,marginTop:6,flexShrink:0}}>◆</span>{p}
-                </li>
+function Hero() {
+  const [g, setG] = useState(0);
+  useEffect(() => { const id = setInterval(() => setG((i) => (i + 1) % GREETINGS.length), 2400); return () => clearInterval(id); }, []);
+  return (
+    <section id="home" className="hero paper">
+      <div className="margin-line" />
+
+      <Sticker className="d-sparkle" delay={1.0}><Sparkle /></Sticker>
+      <Sticker className="d-pencil" delay={1.1}><Pencil /></Sticker>
+      <Sticker className="d-coin" delay={1.2}><Coin /></Sticker>
+      <Sticker className="d-auto" delay={1.3}><Auto /></Sticker>
+      <Sticker className="d-rider" delay={1.4}><Rider /></Sticker>
+      <Sticker className="d-chai" delay={1.5}><Chai /></Sticker>
+      <Sticker className="d-phone" delay={1.6}><Phone /></Sticker>
+      <Sticker className="d-me" delay={1.8}><img src={meCartoon} alt="Tejasvin M, cartoon" draggable="false" /></Sticker>
+
+      <div className="hero-center">
+        <div className="greet hand" key={g}>{GREETINGS[g]}<CurlyArrow /></div>
+
+        <div className="name-wrap">
+          <div className="select-box">
+            <h1 className="name" aria-label={NAME}>
+              {NAME.split("").map((c, i) => (
+                <span key={i} className="ch" style={{ "--i": i }}>{c}</span>
               ))}
-            </ul>
+            </h1>
+            <i className="h tl" /><i className="h tr" /><i className="h bl" /><i className="h br" />
+            <span className="hug">Hug × Hug</span>
+          </div>
+          <span className="tag t-pink   tag-tl">Python</span>
+          <span className="tag t-yellow tag-tr">Full Stack</span>
+          <span className="tag t-green  tag-bl">Django</span>
+          <span className="tag t-blue   tag-br">SQL</span>
+          <div className="cursor-tag">
+            <span className="cursor-ico"><Cursor /></span>
+            <span className="tag t-orange">React / MERN</span>
+          </div>
+        </div>
+
+        <p className="tagline">
+          I build full-stack web apps and Python backends people{" "}
+          <span className="ul">enjoy using<Squiggle /></span>, and automate the data work behind them.
+        </p>
+
+        <div className="cta-row">
+          <button className="btn btn-orange btn-lg" onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })}>SEE MY WORK</button>
+          <span className="hand resume-line">or grab my résumé: <a href="/Tejasvin_resume.pdf" target="_blank" rel="noreferrer">download ↓</a></span>
+        </div>
+
+        <div className="status mono"><i className="dot" />OPEN TO FULL-TIME ROLES · BENGALURU, INDIA · IST</div>
+      </div>
+    </section>
+  );
+}
+
+/* ── About ────────────────────────────────────────────────── */
+const ABOUT_TAGS = [
+  ["Python", "t-yellow"], ["Django / DRF", "t-pink"], ["SQL", "t-green"], ["React / MERN", "t-blue"],
+  ["REST APIs", "t-lilac"], ["Automation", "t-yellow"],
+];
+const STICKIES = [
+  { big: "400+", small: "SQL queries optimized across relational databases", cls: "s-yellow", r: -3 },
+  { big: "2", small: "internships shipped: MERN @ Innoknowvex, GenAI @ Zephyr", cls: "s-pink", r: 2.5 },
+  { big: "8.0", small: "CGPA · B.Tech AI & Data Science, 2026", cls: "s-green", r: -1.5 },
+];
+const PLACES = [
+  ["ZEPHYR TECHNOLOGIES", "t-yellow", -2], ["INNOKNOWVEX", "t-pink", 1.5], ["Q-SPIDERS", "t-green", -1],
+  ["IRJCS · PUBLISHED", "t-blue", 2], ["SENGUNTHAR ENGG. COLLEGE", "t-lilac", -1.5],
+];
+
+function About() {
+  return (
+    <section id="about" className="about paper">
+      <div className="margin-line" />
+      <div className="about-grid">
+        <Reveal className="polaroid" delay={0}>
+          <span className="tape t-pink" />
+          <img src={photo} alt="Tejasvin M" />
+          <span className="hand cap">me, somewhere in Bengaluru</span>
+        </Reveal>
+
+        <Reveal className="notepad" delay={0.1}>
+          <div className="rings">{Array.from({ length: 14 }).map((_, i) => <i key={i} />)}</div>
+          <h2 className="np-title">A BIT ABOUT ME</h2>
+          <p className="np-text">
+            I'm a Python developer from Tamil Nadu, now based in Bengaluru, with a B.Tech in Artificial Intelligence
+            and Data Science. I work across the stack: Python and Django on the backend, React and the MERN stack on the
+            front, and SQL holding it all together. I enjoy turning slow, manual work into clean automated systems, and
+            I'm always learning the next thing that makes software simpler, faster and more reliable.
+          </p>
+          <div className="np-tags">
+            {ABOUT_TAGS.map(([t, c]) => <span key={t} className={`chip ${c}`}>{t}</span>)}
           </div>
         </Reveal>
-      ))}
- 
-      {/* Education */}
-      <Reveal delay={.15}>
-        <div className="edu-card" style={{marginTop:40,background:C.card,border:`1px solid ${C.border}`,borderLeft:`4px solid ${C.gold}`,borderRadius:10,padding:"28px 32px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-          <div>
-            <div style={{fontSize:10,color:C.gold,letterSpacing:".14em",textTransform:"uppercase",marginBottom:8,fontFamily:FM}}>2022 – 2026 · Education</div>
-            <div style={{fontFamily:FH,fontSize:18,fontWeight:700,color:C.text,marginBottom:4,fontStyle:"italic"}}>B.Tech — Artificial Intelligence & Data Science</div>
-            <div style={{fontSize:13,color:C.muted,fontFamily:FB}}>Sengunthar Engineering College, Tiruchengode, Namakkal</div>
-          </div>
-          <div className="edu-cgpa" style={{textAlign:"right",flexShrink:0,marginLeft:24}}>
-            <div style={{fontSize:10,color:C.muted,letterSpacing:".1em",textTransform:"uppercase",marginBottom:4,fontFamily:FM}}>CGPA</div>
-            <div style={{fontFamily:FH,fontSize:40,fontWeight:700,color:C.gold,lineHeight:1,fontStyle:"italic"}}>8.0</div>
-          </div>
+
+        <div className="stickies">
+          {STICKIES.map((n, i) => (
+            <Reveal key={n.big} className={`sticky ${n.cls}`} delay={0.2 + i * 0.1} style={{ "--rot": `${n.r}deg` }}>
+              <div className="st-big">{n.big}</div>
+              <div className="st-small">{n.small}</div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+
+      <Reveal className="places" delay={0.1}>
+        <div className="hand places-title">places I've learned & shipped with ↓</div>
+        <div className="places-row">
+          {PLACES.map(([t, c, r]) => <span key={t} className={`label ${c}`} style={{ "--rot": `${r}deg` }}>{t}</span>)}
         </div>
       </Reveal>
     </section>
   );
 }
- 
-function ProjectCard({num,title,stack,desc,link}){
-  const [hov,setHov]=useState(false);
-  return(
-    <div onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)} style={{background:hov?C.card:C.surface,border:`1px solid ${hov?C.gold+"45":C.border}`,borderRadius:14,padding:"30px 26px",transition:"all .35s ease",cursor:"default",position:"relative",overflow:"hidden"}}>
-      <div style={{position:"absolute",top:-6,right:14,fontFamily:FH,fontStyle:"italic",fontSize:78,fontWeight:700,color:hov?`${C.gold}15`:`${C.text}04`,lineHeight:1,userSelect:"none",transition:"color .4s"}}>{num}</div>
-      <div style={{display:"flex",gap:8,marginBottom:16,flexWrap:"wrap"}}>
-        {stack.map(t=><span key={t} style={{padding:"3px 10px",background:`${C.gold}12`,border:`1px solid ${C.gold}28`,borderRadius:5,fontSize:11,color:C.gold,fontFamily:FM}}>{t}</span>)}
+
+/* ── Selected Work ────────────────────────────────────────── */
+const PROJECTS = [
+  {
+    meta: "PERSONAL PROJECT · 2026", short: "Invoice Platform", color: "t-green", Art: InvoiceArt,
+    title: "INVOICE PROCESSING PLATFORM",
+    desc: "A Django REST platform that takes invoice PDFs and images, extracts and validates the data, and turns it into searchable analytics.",
+    role: "Backend developer", stack: "Python, Django, DRF, PostgreSQL, Celery, Redis, Docker",
+    points: [
+      "Invoice PDF/image uploads with document extraction, validation and PostgreSQL storage, plus auth, search, filtering and pagination.",
+      "Asynchronous processing with Celery and Redis: status tracking, retries and scheduled tasks; optimized queries; deployed with Docker.",
+    ],
+  },
+  {
+    meta: "WEB DEVELOPMENT · 2026", short: "Namma Kovai", color: "t-yellow", Art: KovaiArt,
+    title: "NAMMA KOVAI: EXPLORE COIMBATORE",
+    desc: "A multi-page local guide to Coimbatore covering places, food and adventures, built from scratch and live on Netlify.",
+    role: "Frontend developer", stack: "HTML5, CSS3, JavaScript, Netlify",
+    points: [
+      "Four responsive pages (home, places, food, adventures) with a mobile menu, scroll animations and a touch-friendly featured carousel.",
+      "A searchable, filterable place guide with a map, plus SEO basics: sitemap, robots.txt and Google Search Console.",
+    ],
+    links: [
+      ["VISIT SITE", "https://namma-kovai.netlify.app/", "btn-orange"],
+      ["GITHUB", "https://github.com/TejasvinM/Explore-Kovai-Website", "btn-white"],
+    ],
+  },
+  {
+    meta: "DATABASE DESIGN · 2025", short: "European Travel DB", color: "t-pink", Art: TravelArt,
+    title: "EUROPEAN TRAVEL ORGANIZATION",
+    desc: "Designed a normalized relational database covering customers, tour packages, bookings, payments, hotels, guides, flights, and countries. Implemented PKs, FKs, composite keys, and junction tables following 3NF principles across 10 tables.",
+    role: "Database designer", stack: "PostgreSQL, MySQL, MS SQL Server",
+    points: [],
+    links: [["VIEW ON GITHUB", "https://github.com/TejasvinM/Europian_Travel_organization_Database", "btn-orange"]],
+  },
+  {
+    meta: "AUTOMATION · 2025", short: "Web Scraper", color: "t-blue", Art: ScraperArt,
+    title: "WEB SCRAPER & DATA AUTOMATION",
+    desc: "Python scrapers that pull data from dynamic websites and clean it into ready-to-use CSV and JSON.",
+    role: "Python developer", stack: "Python, Selenium, BeautifulSoup, Pandas",
+    points: [
+      "Dynamic web data extraction with Selenium and BeautifulSoup at 95%+ accuracy, with exception handling and logging.",
+      "Pandas cleaning and validation workflows at 90%+ data accuracy, with automated CSV/JSON export.",
+    ],
+  },
+];
+
+const ROAD = "M-40 210 C 120 120, 260 120, 380 170 S 620 250, 760 170 S 1000 60, 1140 120 S 1360 200, 1480 130";
+
+function ProjectCard({ p, i, offset, onClick }) {
+  const Art = p.Art;
+  const abs = Math.abs(offset);
+  return (
+    <article
+      className={`pcard ${offset === 0 ? "active" : ""}`}
+      style={{ "--o": offset, "--abs": abs, zIndex: 10 - abs }}
+      onClick={offset !== 0 ? onClick : undefined}
+      aria-hidden={offset !== 0}
+    >
+      <div className="pc-art"><Art /></div>
+      <div className="pc-body">
+        <div className="pc-meta mono"><span className={`pc-num ${p.color}`}>{String(i + 1).padStart(2, "0")}</span>{p.meta}</div>
+        <h3 className="pc-title">{p.title}</h3>
+        <p className="pc-desc">{p.desc}</p>
+        <div className="pc-boxes">
+          <div className="pc-box t-pink"><span className="mono">ROLE</span>{p.role}</div>
+          <div className="pc-box t-blue"><span className="mono">STACK</span>{p.stack}</div>
+        </div>
+        {p.points.length > 0 && (
+          <ul className="pc-points">{p.points.map((pt) => <li key={pt}>{pt}</li>)}</ul>
+        )}
+        {p.links && (
+          <div className="pc-links">
+            {p.links.map(([label, href, cls]) => (
+              <a key={href} className={`btn ${cls} pc-link`} href={href} target="_blank" rel="noreferrer" tabIndex={offset === 0 ? 0 : -1}>{label} ↗</a>
+            ))}
+          </div>
+        )}
       </div>
-      <div style={{fontFamily:FH,fontSize:18,fontWeight:700,color:C.text,marginBottom:10,fontStyle:"italic"}}>{title}</div>
-      <p style={{fontSize:13,color:C.muted,lineHeight:1.82,fontFamily:FB}}>{desc}</p>
-      <div onClick={()=> link && window.open(link, "_blank")}
-  style={{marginTop:18,fontSize:12,color:hov?C.gold:C.subtle,fontFamily:FM,transition:"color .3s",cursor:link?"pointer":"default"}}>
-  View project <span style={{display:"inline-block",transform:hov?"translateX(4px)":"none",transition:"transform .3s"}}>→</span>
-</div>
+    </article>
+  );
+}
+
+/* Rider follows the road; positioned in screen space so it never stretches */
+function RoadRider() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const path = document.getElementById("road-path");
+    const svg = path?.ownerSVGElement;
+    if (!path || !svg) return;
+    const len = path.getTotalLength();
+    const DUR = 14000;
+    let raf, t0;
+    const tick = (t) => {
+      if (t0 == null) t0 = t;
+      const r = svg.getBoundingClientRect();
+      const host = ref.current?.parentElement?.getBoundingClientRect();
+      if (ref.current && host) {
+        const sx = r.width / 1440, sy = r.height / 300;
+        const d = (((t - t0) % DUR) / DUR) * len;
+        const a = path.getPointAtLength(d), b = path.getPointAtLength(Math.min(len, d + 4));
+        const x = a.x * sx + (r.left - host.left), y = a.y * sy + (r.top - host.top);
+        const ang = Math.atan2((b.y - a.y) * sy, (b.x - a.x) * sx) * 180 / Math.PI;
+        ref.current.style.transform = `translate(${x}px, ${y}px) rotate(${ang}deg)`;
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  return (
+    <div className="road-rider" ref={ref} aria-hidden="true">
+      <div className="rr-inner"><Rider head={meCartoon} /></div>
     </div>
   );
 }
- 
-/* ── Contact ──────────────────────────────────────────────── */
-function Contact(){
-  return(
-    <section id="contact" className="sec" style={{background:C.bgDark,borderTop:`1px solid ${C.border}`,padding:"90px 8vw 80px"}}>
-      <div className="grid-2" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8vw",alignItems:"start"}}>
-        <Reveal>
-          <SLabel>Get In Touch</SLabel>
-          <h2 style={{fontFamily:FH,fontSize:"clamp(36px,5.5vw,70px)",fontWeight:700,letterSpacing:"-1.5px",color:C.text,lineHeight:.95,marginBottom:22,fontStyle:"italic"}}>
-            Let's<br/><span style={{WebkitTextStroke:`1.5px ${C.gold}`,color:"transparent"}}>Work.</span>
-          </h2>
-          <p style={{fontSize:14,color:C.muted,lineHeight:1.85,maxWidth:360,marginBottom:36,fontFamily:FB}}>
-            Actively seeking entry-level roles in Python development, web development, and backend engineering. Open to full-time roles, internships, and collaborations.
-          </p>
-          <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
-            <GoldBtn primary onClick={()=>window.location.href="mailto:tejas2005tp@gmail.com"}>Say Hello →</GoldBtn>
-            <GoldBtn onClick={()=>window.open("https://linkedin.com/in/tejju","_blank")}>LinkedIn ↗</GoldBtn>
-          </div>
+
+function Work() {
+  const [cur, setCur] = useState(0);
+  const n = PROJECTS.length;
+  const go = (k) => setCur(Math.max(0, Math.min(n - 1, k)));
+  const sx = useRef(null);
+  const down = (e) => { sx.current = e.clientX; };
+  const up = (e) => {
+    if (sx.current == null) return;
+    const dx = e.clientX - sx.current; sx.current = null;
+    if (dx < -50) go(cur + 1); else if (dx > 50) go(cur - 1);
+  };
+  useEffect(() => {
+    const fn = (e) => {
+      const r = document.getElementById("work")?.getBoundingClientRect();
+      if (!r || r.top > window.innerHeight * 0.5 || r.bottom < window.innerHeight * 0.5) return;
+      if (e.key === "ArrowRight") go(cur + 1);
+      if (e.key === "ArrowLeft") go(cur - 1);
+    };
+    window.addEventListener("keydown", fn); return () => window.removeEventListener("keydown", fn);
+  });
+  return (
+    <section id="work" className="work">
+      <div className="work-head">
+        <svg className="road" viewBox="0 0 1440 300" preserveAspectRatio="none" aria-hidden="true">
+          <path id="road-path" d={ROAD} fill="none" stroke="#fff" strokeWidth="60" strokeDasharray="22 14" />
+          <path d={ROAD} fill="none" stroke="#1d1c1f" strokeWidth="50" />
+          <path d={ROAD} fill="none" stroke="#f9c74f" strokeWidth="3.5" strokeDasharray="20 16" />
+        </svg>
+        <RoadRider />
+        <Reveal className="work-title-wrap">
+          <h2 className="work-title">SELECTED<br />WORK</h2>
         </Reveal>
-        <Reveal delay={.15}>
-          {[{label:"Email",value:"tejas2005tp@gmail.com",href:"mailto:tejas2005tp@gmail.com"},{label:"Phone",value:"+91 8940631803",href:"tel:+918940631803"},{label:"LinkedIn",value:"linkedin.com/in/tejju",href:"https://linkedin.com/in/tejju"}].map(({label,value,href})=>(
-            <a key={label} href={href} target="_blank" rel="noreferrer" style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"20px 0",borderBottom:`1px solid ${C.border}`,textDecoration:"none",transition:"all .3s"}}
-              onMouseEnter={e=>{e.currentTarget.querySelector(".arr").style.transform="translate(4px,-4px)";e.currentTarget.querySelector(".lbl").style.color=C.text;}}
-              onMouseLeave={e=>{e.currentTarget.querySelector(".arr").style.transform="translate(0,0)";e.currentTarget.querySelector(".lbl").style.color=C.muted;}}
-            >
-              <div>
-                <div style={{fontSize:10,color:C.gold,letterSpacing:".15em",textTransform:"uppercase",marginBottom:4,fontFamily:FM}}>{label}</div>
-                <div className="lbl" style={{fontSize:14,color:C.muted,fontFamily:FB,transition:"color .3s"}}>{value}</div>
-              </div>
-              <span className="arr" style={{fontSize:18,color:C.gold,transition:"transform .3s"}}>→</span>
-            </a>
-          ))}
-          <div style={{display:"flex",gap:10,marginTop:28,flexWrap:"wrap"}}>
-            {SOCIALS.map((s,i)=><SocialBadge key={s.label} {...s} delay={.1+i*.08}/>)}
-          </div>
-        </Reveal>
+        <div className="hand work-hint">{n} projects · swipe or use the arrows to flip →</div>
+      </div>
+
+      <div className="stage" onPointerDown={down} onPointerUp={up}>
+        {PROJECTS.map((p, i) => <ProjectCard key={p.title} p={p} i={i} offset={i - cur} onClick={() => go(i)} />)}
+      </div>
+
+      <div className="pager">
+        <button className="pg-btn" onClick={() => go(cur - 1)} disabled={cur === 0} aria-label="Previous project">←</button>
+        <div className="pg-dots">
+          {PROJECTS.map((p, i) => <button key={i} className={`pg-dot ${i === cur ? "on" : ""}`} onClick={() => go(i)} aria-label={p.short} />)}
+        </div>
+        <span className="mono pg-label">{String(cur + 1).padStart(2, "0")} / {String(n).padStart(2, "0")} · {PROJECTS[cur].short}</span>
+        <button className="pg-btn" onClick={() => go(cur + 1)} disabled={cur === n - 1} aria-label="Next project">→</button>
       </div>
     </section>
   );
 }
- 
-/* ── Gold Button ──────────────────────────────────────────── */
-function GoldBtn({children,primary,onClick}){
-  const [hov,setHov]=useState(false);
-  return(
-    <button onClick={onClick} onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)} style={{
-      padding:"12px 26px",borderRadius:8,
-      background:primary?(hov?C.goldL:C.gold):(hov?C.surface:"transparent"),
-      color:primary?C.bgDark:(hov?C.text:C.muted),
-      border:primary?"none":`1px solid ${hov?C.gold+"60":C.border}`,
-      fontFamily:FB,fontSize:13,fontWeight:600,
-      cursor:"pointer",transform:hov?"translateY(-2px)":"none",
-      boxShadow:hov&&primary?`0 10px 26px ${C.gold}38`:"none",
-      transition:"all .25s ease",letterSpacing:".01em",
-    }}>{children}</button>
+
+/* ── Experience & Skills ──────────────────────────────────── */
+const JOBS = [
+  {
+    when: "JAN – APR 2026", role: "MERN Stack Intern", company: "Innoknowvex", place: "Bengaluru", color: "t-blue", stamp: "MERN",
+    points: [
+      "Built responsive tourist-platform pages using HTML, CSS, JavaScript, and Bootstrap, integrating frontend components with backend services in a MERN application.",
+      "Optimized page structure and navigation for cross-device usability while handling UI-database data flow and resolving frontend rendering and integration issues.",
+    ],
+    tags: ["React", "Node.js", "MongoDB", "Bootstrap"],
+  },
+  {
+    when: "JUL – AUG 2025", role: "Generative AI Intern", company: "Zephyr Technologies Pvt. Ltd.", place: "Bengaluru", color: "t-pink", stamp: "GenAI",
+    points: [
+      "Applied Python and SQL to extract, clean, validate, and automate ingestion of relational datasets for AI/ML model evaluation and improved data consistency.",
+      "Built a traffic flow prediction model using weather data, Pandas, Random Forest, and Django; generated analytical reports on dataset quality and model-readiness.",
+    ],
+    tags: ["Python", "SQL", "Pandas", "Django"],
+  },
+];
+const EXTRAS = [
+  { k: "EDUCATION · 2022 – 2026", t: "B.Tech, AI & Data Science", s: "Sengunthar Engineering College, Namakkal · CGPA 8.0", c: "s-yellow", r: -1.5 },
+  { k: "CERTIFICATION · 2026", t: "Python Full Stack Development", s: "Q-Spiders, Marathahalli, Bengaluru", c: "s-green", r: 1.5 },
+  { k: "PUBLICATION · MAR 2026", t: "Integrated Advertisement Bidding & Pricing", s: "A machine learning auction model · IRJCS", c: "s-pink", r: -1, href: "https://doi.org/10.26562/irjcs.2026.v13i03.14" },
+];
+const SKILLS = [
+  { t: "LANGUAGES & CS", c: "t-yellow", items: "Python, SQL, JavaScript · Data Structures & Algorithms, OOP, DBMS" },
+  { t: "BACKEND", c: "t-green", items: "Django, Django REST Framework, Flask, Node.js, Express.js, RESTful APIs, Celery, Redis" },
+  { t: "FRONTEND", c: "t-blue", items: "React, HTML5, CSS3, Bootstrap, responsive layouts" },
+  { t: "DATA & AUTOMATION", c: "t-pink", items: "Pandas, NumPy, ETL, data extraction, cleaning & validation, Selenium, BeautifulSoup" },
+  { t: "DATABASES", c: "t-lilac", items: "PostgreSQL, MySQL, MS SQL Server, MongoDB · query optimization" },
+  { t: "TOOLS & SHIPPING", c: "t-white", items: "Git, GitHub, Docker, VS Code, pgAdmin, MySQL Workbench, Netlify" },
+];
+
+function Experience() {
+  return (
+    <section id="experience" className="xp paper">
+      <div className="margin-line" />
+      <div className="xp-inner">
+        <Reveal className="sec-head">
+          <h2 className="sec-title">EXPERIENCE</h2>
+          <span className="hand sec-note">where I've clocked in ↓</span>
+        </Reveal>
+
+        <div className="timeline">
+          {JOBS.map((j, i) => (
+            <Reveal key={j.company} className="job" delay={i * 0.1}>
+              <div className="job-when">
+                <span className={`stamp ${j.color}`}>{j.stamp}</span>
+                <span className="mono">{j.when}</span>
+              </div>
+              <div className="job-card">
+                <h3 className="job-role">{j.role}</h3>
+                <div className="job-co">{j.company} · <span>{j.place}</span></div>
+                <ul className="pc-points job-points">{j.points.map((p) => <li key={p}>{p}</li>)}</ul>
+                <div className="job-tags">{j.tags.map((t) => <span key={t} className="chip t-white">{t}</span>)}</div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+
+        <div className="extras">
+          {EXTRAS.map((e, i) => {
+            const body = (<><div className="mono ex-k">{e.k}</div><div className="ex-t">{e.t}</div><div className="ex-s">{e.s}{e.href ? " ↗" : ""}</div></>);
+            return (
+              <Reveal key={e.t} className={`sticky ex ${e.c}`} delay={i * 0.08} style={{ "--rot": `${e.r}deg` }}>
+                {e.href ? <a href={e.href} target="_blank" rel="noreferrer" className="ex-link">{body}</a> : body}
+              </Reveal>
+            );
+          })}
+        </div>
+
+        <Reveal className="sec-head skills-head">
+          <h2 className="sec-title">TOOLBOX</h2>
+          <span className="hand sec-note">what I reach for ↓</span>
+        </Reveal>
+        <div className="skills">
+          {SKILLS.map((k, i) => (
+            <Reveal key={k.t} className={`skill ${k.c}`} delay={(i % 3) * 0.08}>
+              <h4 className="skill-t">{k.t}</h4>
+              <p className="skill-i">{k.items}</p>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
- 
-/* ── Footer ───────────────────────────────────────────────── */
-function Footer(){
-  return(
-    <footer className="footer" style={{background:C.bg,borderTop:`1px solid ${C.border}`,padding:"20px 52px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-      <span style={{fontSize:11,color:C.subtle,fontFamily:FM}}>© 2025 Tejasvin M</span>
-      <div style={{width:36,height:36,background:C.gold,borderRadius:4,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FH,fontWeight:700,fontSize:16,color:C.bgDark,fontStyle:"italic"}}>T.</div>
-      <span style={{fontSize:11,color:C.subtle,fontFamily:FM}}>Built with React</span>
-    </footer>
+
+/* ── Contact ──────────────────────────────────────────────── */
+function Contact() {
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    try { await navigator.clipboard.writeText(EMAIL); }
+    catch {
+      const t = document.createElement("textarea"); t.value = EMAIL; document.body.appendChild(t); t.select();
+      try { document.execCommand("copy"); } catch { /* ignore */ }
+      t.remove();
+    }
+    setCopied(true); setTimeout(() => setCopied(false), 1800);
+  };
+  return (
+    <section id="contact" className="contact">
+      <div className="hazard" />
+      <Reveal className="ct-head">
+        <h2 className="ct-title">LET'S BUILD<br />SOMETHING.</h2>
+        <div className="hand ct-sub">vaanga, onnah build pannalaam 💛 <span>(come, let's build something)</span></div>
+      </Reveal>
+
+      <div className="ct-body">
+        <svg className="ct-road" viewBox="0 0 1440 220" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M-20 200 C 200 170, 300 90, 520 110 S 900 160, 1100 80 S 1380 40, 1460 60" fill="none" stroke="#2c2b30" strokeWidth="46" />
+          <path d="M-20 200 C 200 170, 300 90, 520 110 S 900 160, 1100 80 S 1380 40, 1460 60" fill="none" stroke="#f9c74f" strokeWidth="3.5" strokeDasharray="22 16" />
+        </svg>
+
+        <Reveal className="polaroid ct-pol" delay={0.05}>
+          <span className="tape t-pink" />
+          <div className="ct-pol-img"><img src={meScooterShirt} alt="Tejasvin on a scooter, illustrated" /></div>
+          <span className="hand cap">on my way to your office</span>
+        </Reveal>
+
+        <Reveal className="letter" delay={0.15}>
+          <div className="postage"><Coin /><span className="mono">BENGALURU</span></div>
+          <div className="hand to">to: you, the person hiring</div>
+          <p className="letter-text">Got a role, a project or just a rough idea? Email is the quickest way to reach me, and I usually reply the same day.</p>
+          <div className="mail-row">
+            <a className="mail" href={`mailto:${EMAIL}`}>{EMAIL}</a>
+            <button className={`copy ${copied ? "done" : ""}`} onClick={copy}>{copied ? "Copied!" : "Copy"}</button>
+          </div>
+          <div className="letter-actions">
+            <a className="btn btn-orange" href="/Tejasvin_resume.pdf" target="_blank" rel="noreferrer">RÉSUMÉ</a>
+            <a className="btn btn-yellow" href="tel:+918940631803">CALL ME</a>
+            <a className="hand l-link" href="https://linkedin.com/in/tejju" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+            <a className="hand l-link" href="https://github.com/TejasvinM" target="_blank" rel="noreferrer">GitHub ↗</a>
+          </div>
+        </Reveal>
+      </div>
+
+      <footer className="foot">
+        <span>© 2026 Tejasvin M</span>
+        <span className="hand foot-mid">konjam fast-ah, aana proper-ah <small>(quick, but done properly)</small></span>
+        <span className="foot-chai"><Chai /></span>
+      </footer>
+    </section>
   );
 }
- 
+
 /* ── App ──────────────────────────────────────────────────── */
-export default function Portfolio(){
-  return(
-    <div style={{background:C.bgDark,color:C.text,minHeight:"100vh",overflowX:"hidden"}}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap');
-        *{box-sizing:border-box;margin:0;padding:0;}
-        html{scroll-behavior:smooth;}
-        body{background:#0e0e0e;}
-        ::selection{background:#c9a84c30;color:#e8d07a;}
-        ::-webkit-scrollbar{width:3px;}
-        ::-webkit-scrollbar-track{background:#0e0e0e;}
-        ::-webkit-scrollbar-thumb{background:#c9a84c55;border-radius:4px;}
-        @media (max-width:1100px){
-          .hero-grid{grid-template-columns:1fr 1fr !important;grid-template-rows:auto auto;}
-          .hero-left{grid-column:1;grid-row:1;padding-top:40px;}
-          .hero-sidebar{display:none !important;}
-          .hero-photo{grid-column:2;grid-row:1 / span 2;padding:40px 6vw 0 0;align-self:center;}
-          .hero-photo-frame{height:70vh !important;max-height:640px;}
-          .hero-info{grid-column:1;grid-row:2;padding:30px 3vw 50px 6vw !important;}
-        }
-        @media (max-width:1100px){
-          .proj-grid{grid-template-columns:1fr 1fr !important;}
-        }
-        @media (max-width:768px){
-          .nav{padding:0 20px !important;}
-          .nav-burger{display:flex !important;}
-          .nav-links{display:none !important;}
-          .nav-links.open{display:flex !important;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:rgba(14,14,14,0.98);border-bottom:1px solid #2a2a2a;padding:8px 0 14px;}
-          .nav-links.open button{padding:14px 24px !important;text-align:left;font-size:16px !important;}
-          .hero-sidebar{display:none !important;}
-          .hero-grid{display:grid !important;grid-template-columns:1fr 46% !important;grid-template-rows:auto !important;column-gap:14px;min-height:auto !important;padding:88px 20px 0 !important;}
-          .hero-left,.hero-left-inner{display:contents !important;}
-          .hero-tagwrap{grid-column:1 / -1;grid-row:1;margin-bottom:20px !important;}
-          .hero-tag{display:inline-block;line-height:1.7;font-size:10px !important;}
-          .hero-namewrap{grid-column:1;grid-row:2;align-self:center;}
-          .hero-name{font-size:clamp(40px,12.5vw,62px) !important;letter-spacing:-1px !important;}
-          .hero-name + .hero-name{margin-bottom:0 !important;}
-          .hero-photo{grid-column:2;grid-row:2;padding:0 !important;display:flex !important;flex-direction:column;align-items:stretch !important;}
-          .hero-photo-frame{height:auto !important;aspect-ratio:3/4;max-height:none;}
-          .hero-badges{position:static !important;transform:none !important;justify-content:center;flex-wrap:nowrap;gap:6px !important;margin-top:12px;}
-          .hero-badges a>div{padding:7px 10px !important;gap:0 !important;}
-          .hero-btns{grid-column:1 / -1;grid-row:3;margin-top:24px;}
-          .hero-info{grid-column:1 / -1;grid-row:4;padding:36px 0 24px !important;}
-          .hero-info p{max-width:none !important;}
-          .hero-spacer{height:16px !important;}
-          .hero-strip{display:grid !important;grid-template-columns:1fr 1fr;gap:20px 16px !important;padding:22px 20px !important;}
-          .sec{padding:64px 20px !important;}
-          #contact.sec{padding:64px 20px 56px !important;}
-          .grid-2,.proj-grid{grid-template-columns:1fr !important;gap:44px !important;}
-          .proj-grid{gap:16px !important;}
-          .exp-row{grid-template-columns:1fr !important;gap:14px !important;padding:28px 0 !important;}
-          .edu-card{flex-direction:column;align-items:flex-start !important;gap:18px;padding:24px 22px !important;}
-          .edu-cgpa{text-align:left !important;margin-left:0 !important;}
-          .footer{padding:18px 20px !important;}
-          .mail-link{font-size:14px !important;word-break:break-all;gap:12px;}
-        }
-        @media (max-width:420px){
-          .skill-name{width:112px !important;font-size:12px !important;}
-          .footer span{font-size:10px !important;}
-        }
-      `}</style>
-      <Nav/>
-      <Hero/>
-      <About/>
-      <Skills/>
-      <Works/>
-      <Contact/>
-      <Footer/>
+export default function Portfolio() {
+  return (
+    <div className="site">
+      <Nav />
+      <Hero />
+      <About />
+      <Work />
+      <Experience />
+      <Contact />
     </div>
   );
 }
