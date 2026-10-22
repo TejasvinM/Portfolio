@@ -212,6 +212,7 @@ const PROJECTS = [
       "Invoice PDF/image uploads with document extraction, validation and PostgreSQL storage, plus auth, search, filtering and pagination.",
       "Asynchronous processing with Celery and Redis: status tracking, retries and scheduled tasks; optimized queries; deployed with Docker.",
     ],
+    links: [["VIEW ON GITHUB", "https://github.com/TejasvinM/Automated_Invoice_project", "btn-orange"]],
   },
   {
     meta: "WEB DEVELOPMENT · 2026", short: "Namma Kovai", color: "t-yellow", Art: KovaiArt,
