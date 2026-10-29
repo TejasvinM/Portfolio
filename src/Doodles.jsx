@@ -200,28 +200,6 @@ export const TravelArt = () => {
   );
 };
 
-export const ScraperArt = () => (
-  <svg viewBox="0 0 470 300" width="100%" height="100%">
-    <rect x="40" y="0" width="70" height="18" fill="#a9cdff" opacity=".9" transform="rotate(-5 75 9)" />
-    <g transform="translate(6 14)">
-      <Browser url="~/scraper  —  python" bar="#1d1c1f">
-        {[["$ python scrape.py --pages 50", "#f9c74f"], ["→ opening listings…", "#9aa0a6"], ["✓ page 12/50  · 248 rows", "#7fdca8"], ["✓ page 13/50  · 271 rows", "#7fdca8"], ["! timeout, retrying (1/3)", "#f2552c"], ["✓ cleaned · deduped · validated", "#7fdca8"], ["→ export data.csv · data.json", "#a9cdff"]].map(([t, c], i) => (
-          <text key={i} x="18" y={60 + i * 24} fontFamily="JetBrains Mono, monospace" fontSize="12" fill={c}>{t}</text>
-        ))}
-      </Browser>
-    </g>
-    <g transform="translate(306 128) rotate(5)">
-      <rect width="148" height="150" rx="12" fill="#fff" stroke={INK} strokeWidth="3.5" />
-      <rect width="148" height="30" rx="12" fill="#2f9e5a" stroke={INK} strokeWidth="3.5" />
-      <text x="14" y="21" fontFamily="Anton, sans-serif" fontSize="15" fill="#fff">DATA.CSV</text>
-      {[0, 1, 2, 3, 4].map((r) => [0, 1, 2].map((c) => (
-        <rect key={`${r}${c}`} x={14 + c * 42} y={42 + r * 20} width="36" height="12" rx="3" fill={r === 0 ? "#f9c74f" : "#e6e8ec"} />
-      )))}
-    </g>
-  </svg>
-);
-
-
 export const KovaiArt = () => (
   <svg viewBox="0 0 470 300" width="100%" height="100%">
     <rect x="40" y="0" width="70" height="18" fill="#f9c74f" opacity=".9" transform="rotate(-5 75 9)" />

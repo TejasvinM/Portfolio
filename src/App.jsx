@@ -3,7 +3,7 @@ import "./portfolio.css";
 import photo from "./assets/photo.jpg.png";
 import meCartoon from "./assets/me-cartoon.png";
 import meScooterShirt from "./assets/me-scooter-shirt.png";
-import { Sparkle, Pencil, Cursor, Coin, Auto, Rider, Chai, Phone, CurlyArrow, Squiggle, InvoiceArt, TravelArt, ScraperArt, KovaiArt } from "./Doodles.jsx";
+import { Sparkle, Pencil, Cursor, Coin, Auto, Rider, Chai, Phone, CurlyArrow, Squiggle, InvoiceArt, TravelArt, KovaiArt } from "./Doodles.jsx";
 
 /* ── Content ──────────────────────────────────────────────── */
 const NAME = "TEJASVIN";
@@ -149,7 +149,7 @@ const ABOUT_TAGS = [
 const STICKIES = [
   { big: "400+", small: "SQL queries optimized across relational databases", cls: "s-yellow", r: -3 },
   { big: "2", small: "internships shipped: MERN @ Innoknowvex, GenAI @ Zephyr", cls: "s-pink", r: 2.5 },
-  { big: "8.0", small: "CGPA · B.Tech AI & Data Science, 2026", cls: "s-green", r: -1.5 },
+  { big: "7.5", small: "CGPA · B.Tech AI & Data Science, 2026", cls: "s-green", r: -1.5 },
 ];
 const PLACES = [
   ["ZEPHYR TECHNOLOGIES", "t-yellow", -2], ["INNOKNOWVEX", "t-pink", 1.5], ["Q-SPIDERS", "t-green", -1],
@@ -215,13 +215,13 @@ const PROJECTS = [
     links: [["VIEW ON GITHUB", "https://github.com/TejasvinM/Automated_Invoice_project", "btn-orange"]],
   },
   {
-    meta: "WEB DEVELOPMENT · 2026", short: "Namma Kovai", color: "t-yellow", Art: KovaiArt,
-    title: "NAMMA KOVAI: EXPLORE COIMBATORE",
-    desc: "A multi-page local guide to Coimbatore covering places, food and adventures, built from scratch and live on Netlify.",
-    role: "Frontend developer", stack: "HTML5, CSS3, JavaScript, Netlify",
+    meta: "FULL-STACK · 2026", short: "Namma Kovai", color: "t-yellow", Art: KovaiArt,
+    title: "NAMMA KOVAI: TOURISM PLATFORM",
+    desc: "A guide to Coimbatore's places, food and adventures, rebuilt from a static website into a full-stack application.",
+    role: "Full-stack developer", stack: "Python, Django, DRF, PostgreSQL, Next.js, TypeScript",
     points: [
-      "Four responsive pages (home, places, food, adventures) with a mobile menu, scroll animations and a touch-friendly featured carousel.",
-      "A searchable, filterable place guide with a map, plus SEO basics: sitemap, robots.txt and Google Search Console.",
+      "Rebuilt a static tourism website into a full-stack application with a Django REST API, PostgreSQL, token authentication, and a Next.js front end with server-side rendering and SEO.",
+      "Built user accounts, a shareable trip planner, and live weather and map integrations; deployed to production with CI/CD and 130+ automated API and end-to-end tests.",
     ],
     links: [
       ["VISIT SITE", "https://namma-kovai.netlify.app/", "btn-orange"],
@@ -235,16 +235,6 @@ const PROJECTS = [
     role: "Database designer", stack: "PostgreSQL, MySQL, MS SQL Server",
     points: [],
     links: [["VIEW ON GITHUB", "https://github.com/TejasvinM/Europian_Travel_organization_Database", "btn-orange"]],
-  },
-  {
-    meta: "AUTOMATION · 2025", short: "Web Scraper", color: "t-blue", Art: ScraperArt,
-    title: "WEB SCRAPER & DATA AUTOMATION",
-    desc: "Python scrapers that pull data from dynamic websites and clean it into ready-to-use CSV and JSON.",
-    role: "Python developer", stack: "Python, Selenium, BeautifulSoup, Pandas",
-    points: [
-      "Dynamic web data extraction with Selenium and BeautifulSoup at 95%+ accuracy, with exception handling and logging.",
-      "Pandas cleaning and validation workflows at 90%+ data accuracy, with automated CSV/JSON export.",
-    ],
   },
 ];
 
@@ -389,15 +379,15 @@ const JOBS = [
   },
 ];
 const EXTRAS = [
-  { k: "EDUCATION · 2022 – 2026", t: "B.Tech, AI & Data Science", s: "Sengunthar Engineering College, Namakkal · CGPA 8.0", c: "s-yellow", r: -1.5 },
-  { k: "CERTIFICATION · 2026", t: "Python Full Stack Development", s: "Q-Spiders, Marathahalli, Bengaluru", c: "s-green", r: 1.5 },
+  { k: "EDUCATION · 2022 – 2026", t: "B.Tech, AI & Data Science", s: "Sengunthar Engineering College, Namakkal · CGPA 7.5", c: "s-yellow", r: -1.5 },
+  { k: "TRAINING · 2026", t: "Python Full Stack Development", s: "Q-Spiders, Marathahalli, Bengaluru", c: "s-green", r: 1.5 },
   { k: "PUBLICATION · MAR 2026", t: "Integrated Advertisement Bidding & Pricing", s: "A machine learning auction model · IRJCS", c: "s-pink", r: -1, href: "https://doi.org/10.26562/irjcs.2026.v13i03.14" },
 ];
 const SKILLS = [
   { t: "LANGUAGES & CS", c: "t-yellow", items: "Python, SQL, JavaScript · Data Structures & Algorithms, OOP, DBMS" },
   { t: "BACKEND", c: "t-green", items: "Django, Django REST Framework, Flask, Node.js, Express.js, RESTful APIs, Celery, Redis" },
-  { t: "FRONTEND", c: "t-blue", items: "React, HTML5, CSS3, Bootstrap, responsive layouts" },
-  { t: "DATA & AUTOMATION", c: "t-pink", items: "Pandas, NumPy, ETL, data extraction, cleaning & validation, Selenium, BeautifulSoup" },
+  { t: "FRONTEND", c: "t-blue", items: "React, Next.js, TypeScript, HTML5, CSS3, Bootstrap, responsive layouts" },
+  { t: "DATA & AUTOMATION", c: "t-pink", items: "Pandas, NumPy, ETL, Python automation, data extraction, cleaning, validation & ingestion" },
   { t: "DATABASES", c: "t-lilac", items: "PostgreSQL, MySQL, MS SQL Server, MongoDB · query optimization" },
   { t: "TOOLS & SHIPPING", c: "t-white", items: "Git, GitHub, Docker, VS Code, pgAdmin, MySQL Workbench, Netlify" },
 ];
