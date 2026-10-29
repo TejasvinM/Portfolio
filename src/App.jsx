@@ -207,7 +207,7 @@ const PROJECTS = [
     meta: "PERSONAL PROJECT · 2026", short: "Invoice Platform", color: "t-green", Art: InvoiceArt,
     title: "INVOICE PROCESSING PLATFORM",
     desc: "A Django REST platform that takes invoice PDFs and images, extracts and validates the data, and turns it into searchable analytics.",
-    role: "Backend developer", stack: "Python, Django, DRF, PostgreSQL, Celery, Redis, Docker",
+    stack: "Python, Django, DRF, PostgreSQL, Celery, Redis, Docker",
     points: [
       "Invoice PDF/image uploads with document extraction, validation and PostgreSQL storage, plus auth, search, filtering and pagination.",
       "Asynchronous processing with Celery and Redis: status tracking, retries and scheduled tasks; optimized queries; deployed with Docker.",
@@ -218,7 +218,7 @@ const PROJECTS = [
     meta: "FULL-STACK · 2026", short: "Namma Kovai", color: "t-yellow", Art: KovaiArt,
     title: "NAMMA KOVAI: TOURISM PLATFORM",
     desc: "A guide to Coimbatore's places, food and adventures, rebuilt from a static website into a full-stack application.",
-    role: "Full-stack developer", stack: "Python, Django, DRF, PostgreSQL, Next.js, TypeScript",
+    stack: "Python, Django, DRF, PostgreSQL, Next.js, TypeScript",
     points: [
       "Rebuilt a static tourism website into a full-stack application with a Django REST API, PostgreSQL, token authentication, and a Next.js front end with server-side rendering and SEO.",
       "Built user accounts, a shareable trip planner, and live weather and map integrations; deployed to production with CI/CD and 130+ automated API and end-to-end tests.",
@@ -232,7 +232,7 @@ const PROJECTS = [
     meta: "DATABASE DESIGN · 2025", short: "European Travel DB", color: "t-pink", Art: TravelArt,
     title: "EUROPEAN TRAVEL ORGANIZATION",
     desc: "Designed a normalized relational database covering customers, tour packages, bookings, payments, hotels, guides, flights, and countries. Implemented PKs, FKs, composite keys, and junction tables following 3NF principles across 10 tables.",
-    role: "Database designer", stack: "PostgreSQL, MySQL, MS SQL Server",
+    stack: "PostgreSQL, MySQL, MS SQL Server",
     points: [],
     links: [["VIEW ON GITHUB", "https://github.com/TejasvinM/Europian_Travel_organization_Database", "btn-orange"]],
   },
@@ -256,7 +256,6 @@ function ProjectCard({ p, i, offset, onClick }) {
         <h3 className="pc-title">{p.title}</h3>
         <p className="pc-desc">{p.desc}</p>
         <div className="pc-boxes">
-          <div className="pc-box t-pink"><span className="mono">ROLE</span>{p.role}</div>
           <div className="pc-box t-blue"><span className="mono">STACK</span>{p.stack}</div>
         </div>
         {p.points.length > 0 && (
